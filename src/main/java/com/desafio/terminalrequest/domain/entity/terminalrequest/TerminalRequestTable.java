@@ -1,6 +1,5 @@
 package com.desafio.terminalrequest.domain.entity.terminalrequest;
 
-import com.desafio.terminalrequest.domain.entity.Address;
 import com.desafio.terminalrequest.domain.enums.TerminalRequestsStatus;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -19,7 +18,27 @@ public class TerminalRequestTable {
     @Embedded
     private Address address;
 
-    public TerminalRequestTable() {
+    public TerminalRequest toDomain() {
+        return new TerminalRequest(
+                this.id,
+                this.status,
+                this.customerId,
+                this.terminalType,
+                this.address
+        );
+    }
+
+    public static TerminalRequestTable toModel(TerminalRequest terminalRequest) {
+        return new TerminalRequestTable(
+                terminalRequest.getId(),
+                terminalRequest.getStatus(),
+                terminalRequest.getCustomerId(),
+                terminalRequest.getTerminalType(),
+                terminalRequest.getAddress()
+        );
+    }
+
+    protected TerminalRequestTable() {
     }
 
     public TerminalRequestTable(

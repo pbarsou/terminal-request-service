@@ -1,4 +1,4 @@
-package com.desafio.terminalrequest.domain.entity;
+package com.desafio.terminalrequest.domain.entity.terminalrequest;
 
 import jakarta.persistence.Embeddable;
 

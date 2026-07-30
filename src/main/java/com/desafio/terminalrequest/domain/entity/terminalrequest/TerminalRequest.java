@@ -1,6 +1,5 @@
 package com.desafio.terminalrequest.domain.entity.terminalrequest;
 
-import com.desafio.terminalrequest.domain.entity.Address;
 import com.desafio.terminalrequest.domain.enums.TerminalRequestsStatus;
 
 import java.util.Objects;
@@ -19,6 +18,14 @@ public class TerminalRequest {
         this.terminalType = terminalType;
         this.address = address;
         this.status = TerminalRequestsStatus.SOLICITADO;
+    }
+
+    public TerminalRequest(UUID id, TerminalRequestsStatus status, String customerId, String terminalType, Address address) {
+        this.id = id;
+        this.customerId = customerId;
+        this.terminalType = terminalType;
+        this.address = address;
+        this.status = status;
     }
 
     public UUID getId() {
