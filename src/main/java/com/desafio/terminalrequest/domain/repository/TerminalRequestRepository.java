@@ -1,8 +1,6 @@
-package com.desafio.terminalrequest.infrastructure.repository;
+package com.desafio.terminalrequest.domain.repository;
 
 import com.desafio.terminalrequest.domain.entity.terminalrequest.TerminalRequest;
-import com.desafio.terminalrequest.domain.entity.terminalrequest.TerminalRequestTable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;

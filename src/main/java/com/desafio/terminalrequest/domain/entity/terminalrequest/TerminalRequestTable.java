@@ -1,10 +1,8 @@
 package com.desafio.terminalrequest.domain.entity.terminalrequest;
 
 import com.desafio.terminalrequest.domain.enums.TerminalRequestsStatus;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
 import java.util.UUID;
 
 @Entity
@@ -12,6 +10,7 @@ import java.util.UUID;
 public class TerminalRequestTable {
     @Id
     private UUID id;
+    @Enumerated(EnumType.STRING)
     private TerminalRequestsStatus status;
     private String customerId;
     private String terminalType;
@@ -20,7 +19,6 @@ public class TerminalRequestTable {
 
     public TerminalRequest toDomain() {
         return new TerminalRequest(
-                this.id,
                 this.status,
                 this.customerId,
                 this.terminalType,

@@ -6,22 +6,20 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class TerminalRequest {
-    private final UUID id;
+    private final UUID id = UUID.randomUUID();
     private TerminalRequestsStatus status;
     private final String customerId;
     private final String terminalType;
     private final Address address;
 
-    public TerminalRequest(UUID id, String customerId, String terminalType, Address address) {
-        this.id = id;
+    public TerminalRequest(String customerId, String terminalType, Address address) {
         this.customerId = customerId;
         this.terminalType = terminalType;
         this.address = address;
         this.status = TerminalRequestsStatus.SOLICITADO;
     }
 
-    public TerminalRequest(UUID id, TerminalRequestsStatus status, String customerId, String terminalType, Address address) {
-        this.id = id;
+    public TerminalRequest(TerminalRequestsStatus status, String customerId, String terminalType, Address address) {
         this.customerId = customerId;
         this.terminalType = terminalType;
         this.address = address;

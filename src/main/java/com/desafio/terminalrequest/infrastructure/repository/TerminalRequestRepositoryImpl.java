@@ -2,6 +2,7 @@ package com.desafio.terminalrequest.infrastructure.repository;
 
 import com.desafio.terminalrequest.domain.entity.terminalrequest.TerminalRequest;
 import com.desafio.terminalrequest.domain.entity.terminalrequest.TerminalRequestTable;
+import com.desafio.terminalrequest.domain.repository.TerminalRequestRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
@@ -25,7 +26,8 @@ public class TerminalRequestRepositoryImpl implements TerminalRequestRepository 
 
     @Override
     public Optional<TerminalRequest> getById(UUID id) {
-        return postgresRepository.getReferenceById(id).toDomain() != null ? Optional.of(postgresRepository.getReferenceById(id).toDomain()) : Optional.empty();
+        return postgresRepository.getReferenceById(id).toDomain() != null ?
+                Optional.of(postgresRepository.getReferenceById(id).toDomain()) : Optional.empty();
     }
 }
 
