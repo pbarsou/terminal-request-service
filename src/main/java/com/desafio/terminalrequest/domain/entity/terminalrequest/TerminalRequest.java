@@ -1,6 +1,7 @@
-package com.desafio.terminalrequestservice.domain.entity;
+package com.desafio.terminalrequest.domain.entity.terminalrequest;
 
-import com.desafio.terminalrequestservice.domain.enums.TerminalRequestsStatus;
+import com.desafio.terminalrequest.domain.entity.Address;
+import com.desafio.terminalrequest.domain.enums.TerminalRequestsStatus;
 
 import java.util.Objects;
 import java.util.UUID;

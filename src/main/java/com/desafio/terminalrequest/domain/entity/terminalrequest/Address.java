@@ -1,5 +1,8 @@
-package com.desafio.terminalrequestservice.domain.entity;
+package com.desafio.terminalrequest.domain.entity;
 
+import jakarta.persistence.Embeddable;
+
+@Embeddable
 public record Address(
         String street,
         String number,

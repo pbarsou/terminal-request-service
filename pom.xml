@@ -28,6 +28,10 @@
 	</scm>
 	<properties>
 		<java.version>21</java.version>
+		<server.port>8080</server.port>
+
+		<!-- plugins properties -->
+		<docker-maven-plugin.version>0.48.1</docker-maven-plugin.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -63,13 +67,52 @@
 			<artifactId>spring-boot-starter-webmvc-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
+		<finalName>${project.artifactId}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>${docker-maven-plugin.version}</version>
+				<configuration>
+					<images>
+						<image>
+							<name>${project.artifactId}</name>
+							<build>
+								<contextDir>${project.basedir}</contextDir>
+								<dockerFile>${project.basedir}/docker/Dockerfile</dockerFile>
+								<tags>
+									<tag>${project.version}</tag>
+								</tags>
+								<args>
+									<PROJECT_JAR_PATH>target/${project.build.finalName}.jar</PROJECT_JAR_PATH>
+								</args>
+							</build>
+						</image>
+					</images>
+				</configuration>
+				<executions>
+					<execution>
+						<id>build-image</id>
+						<phase>package</phase>
+						<goals>
+							<goal>build</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

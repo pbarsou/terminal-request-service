@@ -1,4 +1,4 @@
-package com.desafio.terminalrequestservice.domain.enums;
+package com.desafio.terminalrequest.domain.enums;
 
 public enum TerminalRequestsStatus {
     SOLICITADO,

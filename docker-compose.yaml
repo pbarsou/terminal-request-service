@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:18.4
+    mem_limit: 512m
+    cpus: 1.0
+    hostname: postgres
+    container_name: terminal-request-service-postgres
+    ports:
+      - "5432:5432"
+    environment:
+        POSTGRES_USER: terminal_request_service
+        POSTGRES_PASSWORD: terminal_request_service
+        POSTGRES_DB: terminal_request_service
+        PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+    name: terminal_request_service_postgres_volume
