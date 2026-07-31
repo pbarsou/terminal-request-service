@@ -15,7 +15,7 @@ public class TerminalRequestRepositoryImpl implements TerminalRequestRepository 
 
     private final TerminalRequestPostgresRepository postgresRepository;
 
-    public TerminalRequestRepositoryImpl(TerminalRequestPostgresRepository postgresRepository) {
+    TerminalRequestRepositoryImpl(TerminalRequestPostgresRepository postgresRepository) {
         this.postgresRepository = postgresRepository;
     }
 

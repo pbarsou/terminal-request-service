@@ -13,7 +13,7 @@ import java.util.UUID;
 @RequestMapping("/terminal-request")
 public class TerminalRequestApiImpl implements TerminalRequestApi{
 
-    private TerminalRequestServicePort terminalRequestService;
+    private final TerminalRequestServicePort terminalRequestService;
 
     public TerminalRequestApiImpl(TerminalRequestServicePort terminalRequestService) {
         this.terminalRequestService = terminalRequestService;
