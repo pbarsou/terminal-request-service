@@ -3,6 +3,7 @@ package com.desafio.terminalrequest.domain.entity.terminalrequest;
 import com.desafio.terminalrequest.domain.enums.TerminalRequestsStatus;
 import jakarta.persistence.*;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -16,13 +17,16 @@ public class TerminalRequestTable {
     private String terminalType;
     @Embedded
     private Address address;
+    private Instant createdAt;
+    private Instant updatedAt;
 
     public TerminalRequest toDomain() {
         return new TerminalRequest(
                 this.status,
                 this.customerId,
                 this.terminalType,
-                this.address
+                this.address,
+                this.updatedAt
         );
     }
 
@@ -32,7 +36,9 @@ public class TerminalRequestTable {
                 terminalRequest.getStatus(),
                 terminalRequest.getCustomerId(),
                 terminalRequest.getTerminalType(),
-                terminalRequest.getAddress()
+                terminalRequest.getAddress(),
+                terminalRequest.getCreatedAt(),
+                terminalRequest.getUpdatedAt()
         );
     }
 
@@ -44,13 +50,17 @@ public class TerminalRequestTable {
             TerminalRequestsStatus status,
             String customerId,
             String terminalType,
-            Address address
+            Address address,
+            Instant createdAt,
+            Instant updatedAt
     ) {
         this.id = id;
         this.status = status;
         this.customerId = customerId;
         this.terminalType = terminalType;
         this.address = address;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public UUID getId() {
@@ -59,10 +69,6 @@ public class TerminalRequestTable {
 
     public TerminalRequestsStatus getStatus() {
         return status;
-    }
-
-    public void setStatus(TerminalRequestsStatus status) {
-        this.status = status;
     }
 
     public String getCustomerId() {
@@ -75,5 +81,13 @@ public class TerminalRequestTable {
 
     public Address getAddress() {
         return address;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
     }
 }

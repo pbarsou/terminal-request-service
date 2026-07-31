@@ -1,19 +1,25 @@
-FROM azul/zulu-openjdk-alpine:25-jre-headless-latest AS build
+FROM azul/zulu-openjdk-alpine:21-jre-headless-latest AS build
 
+WORKDIR /build
 ARG PROJECT_JAR_PATH
+COPY ${PROJECT_JAR_PATH} app.jar
 
-COPY ${PROJECT_JAR_PATH} .
-RUN mkdir -p extracted && java -Djarmode=tools -jar terminal-request-service.jar extract --layers --destination extracted
+RUN mkdir -p extracted && java -Djarmode=tools -jar app.jar extract --layers --destination extracted
 
-
-FROM azul/zulu-openjdk-alpine:25
-
+FROM azul/zulu-openjdk-alpine:21
 WORKDIR /app
 
-COPY --from=build extracted/dependencies/ ./
-COPY --from=build extracted/spring-boot-loader/ ./
-COPY --from=build extracted/application/ ./
+COPY target/dd-java-agent.jar /app/dd-java-agent.jar
+
+COPY --from=build /build/extracted/dependencies/lib/ /app/lib/
+COPY --from=build /build/extracted/application/ /app/application/
 
 EXPOSE 8080
 
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /app/terminal-request-service.jar"]
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS \
+  -javaagent:/app/dd-java-agent.jar \
+  -Ddd.service=${DD_SERVICE} \
+  -Ddd.env=${DD_ENV} \
+  -Ddd.version=${DD_VERSION} \
+  -cp \"/app/application/*:/app/lib/*\" \
+  com.desafio.terminalrequest.TerminalRequestApplication"]

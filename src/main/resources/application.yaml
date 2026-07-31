@@ -12,7 +12,7 @@ spring:
 
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/terminal_request_service?currentSchema=public}
+    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/${POSTGRES_DB:terminal_request_service}?currentSchema=public}
     username: ${POSTGRES_USERNAME:terminal_request_service}
     password: ${POSTGRES_PASSWORD:terminal_request_service}
     hikari:
@@ -22,3 +22,7 @@ spring:
       connection-timeout: ${HIKARI_CONNECTION_TIMEOUT:30000}
       idle-timeout: ${HIKARI_IDLE_TIMEOUT:600000}
       max-lifetime: ${HIKARI_MAX_LIFETIME:1800000}
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} %-5p [%t] %X{dd.trace_id} %X{dd.span_id} %c{1} - %m%n"

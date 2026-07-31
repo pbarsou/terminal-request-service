@@ -1,4 +1,37 @@
 services:
+  app:
+    image: terminal-request-service:latest
+    depends_on:
+      - postgres
+      - datadog-agent
+    environment:
+      - DD_API_KEY=${DD_API_KEY}
+      - DD_AGENT_HOST=datadog-agent
+      - DD_SERVICE=${DD_SERVICE}
+      - DD_ENV=${DD_ENV}
+      - DD_VERSION=${DD_VERSION}
+      - DD_LOGS_INJECTION=true
+      - DD_PROFILING_ENABLED=true
+      - POSTGRES_URL=jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
+  datadog-agent:
+    image: registry.datadoghq.com/agent:7
+    container_name: dd-agent
+    environment:
+      - DD_API_KEY=${DD_API_KEY}
+      - DD_SITE=datadoghq.com
+      - DD_APM_ENABLED=true
+      - DD_APM_NON_LOCAL_TRAFFIC=true
+      - DD_DOGSTATSD_NON_LOCAL_TRAFFIC=true
+      - DD_ENV=${DD_ENV}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /proc/:/host/proc/:ro
+      - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+
   postgres:
     image: postgres:18.4
     mem_limit: 512m
@@ -8,9 +41,9 @@ services:
     ports:
       - "5432:5432"
     environment:
-        POSTGRES_USER: terminal_request_service
-        POSTGRES_PASSWORD: terminal_request_service
-        POSTGRES_DB: terminal_request_service
+        POSTGRES_USER: ${POSTGRES_USER}
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+        POSTGRES_DB: ${POSTGRES_DB}
         PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - postgres_data:/var/lib/postgresql/data

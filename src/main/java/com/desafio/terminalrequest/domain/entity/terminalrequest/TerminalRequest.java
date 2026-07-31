@@ -2,6 +2,7 @@ package com.desafio.terminalrequest.domain.entity.terminalrequest;
 
 import com.desafio.terminalrequest.domain.enums.TerminalRequestsStatus;
 
+import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -11,6 +12,8 @@ public class TerminalRequest {
     private final String customerId;
     private final String terminalType;
     private final Address address;
+    private final Instant createdAt = Instant.now();
+    private Instant updatedAt = Instant.now();
 
     public TerminalRequest(String customerId, String terminalType, Address address) {
         this.customerId = customerId;
@@ -19,11 +22,18 @@ public class TerminalRequest {
         this.status = TerminalRequestsStatus.SOLICITADO;
     }
 
-    public TerminalRequest(TerminalRequestsStatus status, String customerId, String terminalType, Address address) {
+    public TerminalRequest(
+            TerminalRequestsStatus status,
+            String customerId,
+            String terminalType,
+            Address address,
+            Instant updatedAt
+    ) {
         this.customerId = customerId;
         this.terminalType = terminalType;
         this.address = address;
         this.status = status;
+        this.updatedAt = updatedAt;
     }
 
     public UUID getId() {
@@ -48,6 +58,14 @@ public class TerminalRequest {
 
     public Address getAddress() {
         return address;
+    }
+
+    public Instant getCreatedAt() { return createdAt; }
+
+    public Instant getUpdatedAt() { return updatedAt; }
+
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     @Override
