@@ -29,6 +29,8 @@
 	<properties>
 		<java.version>21</java.version>
 		<server.port>8080</server.port>
+		<detekt.version>1.23.7</detekt.version>
+		<detekt.skip>compile</detekt.skip>
 
 		<!-- plugins properties -->
 		<docker-maven-plugin.version>0.48.1</docker-maven-plugin.version>
@@ -156,6 +158,36 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.github.ozsie</groupId>
+				<artifactId>detekt-maven-plugin</artifactId>
+				<version>${detekt.version}</version>
+				<executions>
+					<execution>
+						<id>detekt</id>
+						<phase>${detekt.skip}</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+						<configuration>
+							<config>detekt-custom-rules.yml</config>
+							<autoCorrect>true</autoCorrect>
+						</configuration>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>io.gitlab.arturbosch.detekt</groupId>
+						<artifactId>detekt-formatting</artifactId>
+						<version>${detekt.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>io.gitlab.arturbosch.detekt</groupId>
+						<artifactId>detekt-rules-libraries</artifactId>
+						<version>${detekt.version}</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 	</build>
