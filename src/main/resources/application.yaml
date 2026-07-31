@@ -23,6 +23,10 @@ spring:
       idle-timeout: ${HIKARI_IDLE_TIMEOUT:600000}
       max-lifetime: ${HIKARI_MAX_LIFETIME:1800000}
 
+  flyway:
+    baseline-on-migrate: true
+    clean-disabled: true
+
 logging:
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} %-5p [%t] %X{dd.trace_id} %X{dd.span_id} %c{1} - %m%n"
