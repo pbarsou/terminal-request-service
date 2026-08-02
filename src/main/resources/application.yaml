@@ -30,3 +30,9 @@ spring:
 logging:
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} %-5p [%t] %X{dd.trace_id} %X{dd.span_id} %c{1} - %m%n"
+
+aws:
+  region: ${AWS_REGION:us-east-1}
+  lambda:
+    enabled: ${AWS_LAMBDA_ENABLED:true}
+    customer-validation-function: ${AWS_LAMBDA_CUSTOMER_VALIDATION_FUNCTION:}
