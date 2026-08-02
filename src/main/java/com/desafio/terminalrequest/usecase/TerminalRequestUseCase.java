@@ -6,7 +6,7 @@ import com.desafio.terminalrequest.domain.enums.TerminalRequestsStatus;
 import com.desafio.terminalrequest.domain.enums.TerminalType;
 import com.desafio.terminalrequest.domain.exceptions.TerminalRequestNotFoundException;
 import com.desafio.terminalrequest.domain.exceptions.TerminalRequestProcessException;
-import com.desafio.terminalrequest.domain.service.CustomerServicePort;
+import com.desafio.terminalrequest.domain.service.CustomerValidationServicePort;
 import com.desafio.terminalrequest.domain.service.DeliveryServicePort;
 import com.desafio.terminalrequest.domain.service.TerminalRequestServicePort;
 import com.desafio.terminalrequest.domain.service.TerminalReservationServicePort;
@@ -24,13 +24,13 @@ public class TerminalRequestUseCase {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final TerminalRequestServicePort terminalRequestService;
-    private final CustomerServicePort customerService;
+    private final CustomerValidationServicePort customerService;
     private final TerminalReservationServicePort terminalReservationService;
     private final DeliveryServicePort deliveryService;
 
     public TerminalRequestUseCase(
             TerminalRequestServicePort terminalRequestService,
-            CustomerServicePort customerService,
+            CustomerValidationServicePort customerService,
             TerminalReservationServicePort terminalReservationService,
             DeliveryServicePort deliveryService
     ) {
@@ -72,7 +72,7 @@ public class TerminalRequestUseCase {
         terminalRequestService.updateStatus(request.getId(), status);
 
         if (!isActive) {
-            logger.info("Request {} rejected: customer inactive", request.getId());
+            logger.error("Request {} rejected: customer inactive", request.getId());
         }
         return isActive;
     }
@@ -84,7 +84,7 @@ public class TerminalRequestUseCase {
 
         if (terminalId == null) {
             terminalRequestService.updateStatus(terminalRequestId, TerminalRequestsStatus.ERRO_RESERVA);
-            logger.info("Error reserving terminal for terminalRequest {}. " +
+            logger.error("Error reserving terminal for terminalRequest {}. " +
                     "No POS terminal available.", terminalRequestId);
             return null;
         }

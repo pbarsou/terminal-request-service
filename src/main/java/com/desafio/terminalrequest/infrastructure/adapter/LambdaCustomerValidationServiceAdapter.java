@@ -1,14 +1,11 @@
 package com.desafio.terminalrequest.infrastructure.adapter;
 
-import com.desafio.terminalrequest.domain.service.CustomerServicePort;
-import com.desafio.terminalrequest.infrastructure.adapter.response.LambdaCustomerValidationReponse;
+import com.desafio.terminalrequest.domain.service.CustomerValidationServicePort;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
-import software.amazon.awssdk.services.lambda.model.LambdaResponse;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -17,17 +14,17 @@ import java.util.Map;
 
 @Component
 @ConditionalOnProperty(name = "aws.lambda.enabled", havingValue = "true")
-public class LambdaCustomerValidationAdapter implements CustomerServicePort {
+public class LambdaCustomerValidationServiceAdapter implements CustomerValidationServicePort {
 
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
     private final String functionUrl;
 
-    public LambdaCustomerValidationAdapter(ObjectMapper objectMapper,
-                                           @Value("${aws.lambda.customer-validation-function}") String functionUrl) {
+    public LambdaCustomerValidationServiceAdapter(ObjectMapper objectMapper,
+                                                  @Value("${aws.lambda.customer-validation-function}") String functionUrl) {
         this.httpClient = HttpClient.newHttpClient();
         this.objectMapper = objectMapper;
-        this.functionUrl = functionUrl;
+        this.functionUrl = functionUrl.trim();
     }
 
     @Override
@@ -49,4 +46,6 @@ public class LambdaCustomerValidationAdapter implements CustomerServicePort {
             throw new IllegalStateException("Falha na validação do cliente", e);
         }
     }
+
+    public record LambdaCustomerValidationReponse(Boolean active) { }
 }
