@@ -1,6 +1,7 @@
 package com.desafio.terminalrequest.domain.entity.terminalrequest;
 
 import com.desafio.terminalrequest.domain.enums.TerminalRequestsStatus;
+import com.desafio.terminalrequest.domain.enums.TerminalType;
 import jakarta.persistence.*;
 
 import java.time.Instant;
@@ -14,7 +15,10 @@ public class TerminalRequestTable {
     @Enumerated(EnumType.STRING)
     private TerminalRequestsStatus status;
     private String customerId;
-    private String terminalType;
+    @Enumerated(EnumType.STRING)
+    private TerminalType terminalType;
+    private UUID terminalId;
+    private UUID trackingId;
     @Embedded
     private Address address;
     private Instant createdAt;
@@ -22,10 +26,14 @@ public class TerminalRequestTable {
 
     public TerminalRequest toDomain() {
         return new TerminalRequest(
+                this.id,
                 this.status,
                 this.customerId,
                 this.terminalType,
+                this.terminalId,
+                this.trackingId,
                 this.address,
+                this.createdAt,
                 this.updatedAt
         );
     }
@@ -36,6 +44,8 @@ public class TerminalRequestTable {
                 terminalRequest.getStatus(),
                 terminalRequest.getCustomerId(),
                 terminalRequest.getTerminalType(),
+                terminalRequest.getTerminalId(),
+                terminalRequest.getTrackingId(),
                 terminalRequest.getAddress(),
                 terminalRequest.getCreatedAt(),
                 terminalRequest.getUpdatedAt()
@@ -49,7 +59,9 @@ public class TerminalRequestTable {
             UUID id,
             TerminalRequestsStatus status,
             String customerId,
-            String terminalType,
+            TerminalType terminalType,
+            UUID terminalId,
+            UUID trackingId,
             Address address,
             Instant createdAt,
             Instant updatedAt
@@ -58,6 +70,8 @@ public class TerminalRequestTable {
         this.status = status;
         this.customerId = customerId;
         this.terminalType = terminalType;
+        this.terminalId = terminalId;
+        this.trackingId = trackingId;
         this.address = address;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -75,12 +89,20 @@ public class TerminalRequestTable {
         return customerId;
     }
 
-    public String getTerminalType() {
+    public TerminalType getTerminalType() {
         return terminalType;
     }
 
     public Address getAddress() {
         return address;
+    }
+
+    public UUID getTerminalId() {
+        return terminalId;
+    }
+
+    public UUID getTrackingId() {
+        return trackingId;
     }
 
     public Instant getCreatedAt() {

@@ -1,13 +1,15 @@
 CREATE TABLE IF NOT EXISTS terminal_request (
     id uuid PRIMARY KEY,
-    status VARCHAR(255),
-    customer_id VARCHAR(255),
-    terminal_type VARCHAR(255),
-    street VARCHAR(255),
-    number VARCHAR(50),
-    city VARCHAR(255),
-    state VARCHAR(2),
-    zip_code VARCHAR(20),
+    status VARCHAR(255) NOT NULL,
+    customer_id VARCHAR(255) NOT NULL,
+    terminal_type VARCHAR(255) NOT NULL,
+    terminal_id uuid,
+    tracking_id uuid,
+    street VARCHAR(255) NOT NULL,
+    number VARCHAR(50) NOT NULL,
+    city VARCHAR(255) NOT NULL,
+    state VARCHAR(2) NOT NULL,
+    zip_code VARCHAR(20) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE NOT NULL
 );
@@ -19,6 +21,8 @@ COMMENT ON COLUMN terminal_request.id IS 'Unique identifier';
 COMMENT ON COLUMN terminal_request.status IS 'Terminal request status';
 COMMENT ON COLUMN terminal_request.customer_id IS 'Customer identifier';
 COMMENT ON COLUMN terminal_request.terminal_type IS 'Terminal type (e.g., POS_WIFI)';
+COMMENT ON COLUMN terminal_request.terminal_id IS 'Terminal identifier assigned';
+COMMENT ON COLUMN terminal_request.tracking_id IS 'Tracking code for delivery';
 
 COMMENT ON COLUMN terminal_request.street IS 'Address street';
 COMMENT ON COLUMN terminal_request.number IS 'Address number';

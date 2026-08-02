@@ -26,8 +26,7 @@ public class TerminalRequestRepositoryImpl implements TerminalRequestRepository 
 
     @Override
     public Optional<TerminalRequest> getById(UUID id) {
-        return postgresRepository.getReferenceById(id).toDomain() != null ?
-                Optional.of(postgresRepository.getReferenceById(id).toDomain()) : Optional.empty();
+        return postgresRepository.findById(id).map(TerminalRequestTable::toDomain);
     }
 }
 

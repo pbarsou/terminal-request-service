@@ -1,21 +1,24 @@
 package com.desafio.terminalrequest.domain.entity.terminalrequest;
 
 import com.desafio.terminalrequest.domain.enums.TerminalRequestsStatus;
+import com.desafio.terminalrequest.domain.enums.TerminalType;
 
 import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 
 public class TerminalRequest {
-    private final UUID id = UUID.randomUUID();
+    private UUID id = UUID.randomUUID();
     private TerminalRequestsStatus status;
     private final String customerId;
-    private final String terminalType;
+    private final TerminalType terminalType;
     private final Address address;
+    private UUID terminalId = null;
+    private UUID trackingId = null;
     private final Instant createdAt = Instant.now();
     private Instant updatedAt = Instant.now();
 
-    public TerminalRequest(String customerId, String terminalType, Address address) {
+    public TerminalRequest(String customerId, TerminalType terminalType, Address address) {
         this.customerId = customerId;
         this.terminalType = terminalType;
         this.address = address;
@@ -23,16 +26,23 @@ public class TerminalRequest {
     }
 
     public TerminalRequest(
+            UUID id,
             TerminalRequestsStatus status,
             String customerId,
-            String terminalType,
+            TerminalType terminalType,
+            UUID terminalId,
+            UUID trackingId,
             Address address,
+            Instant createdAt,
             Instant updatedAt
     ) {
+        this.id = id;
+        this.status = status;
         this.customerId = customerId;
         this.terminalType = terminalType;
+        this.terminalId = terminalId;
+        this.trackingId = trackingId;
         this.address = address;
-        this.status = status;
         this.updatedAt = updatedAt;
     }
 
@@ -52,12 +62,28 @@ public class TerminalRequest {
         return customerId;
     }
 
-    public String getTerminalType() {
+    public TerminalType getTerminalType() {
         return terminalType;
     }
 
     public Address getAddress() {
         return address;
+    }
+
+    public UUID getTerminalId() {
+        return terminalId;
+    }
+
+    public void setTerminalId(UUID terminalId) {
+        this.terminalId = terminalId;
+    }
+
+    public UUID getTrackingId() {
+        return trackingId;
+    }
+
+    public void setTrackingId(UUID trackingId) {
+        this.trackingId = trackingId;
     }
 
     public Instant getCreatedAt() { return createdAt; }
@@ -72,11 +98,14 @@ public class TerminalRequest {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         TerminalRequest that = (TerminalRequest) o;
-        return Objects.equals(id, that.id) && Objects.equals(customerId, that.customerId) && Objects.equals(terminalType, that.terminalType) && Objects.equals(address, that.address) && Objects.equals(status, that.status);
+        return Objects.equals(id, that.id) && status == that.status && Objects.equals(customerId, that.customerId)
+                && terminalType == that.terminalType && Objects.equals(address, that.address)
+                && Objects.equals(terminalId, that.terminalId) && Objects.equals(trackingId, that.trackingId)
+                && Objects.equals(createdAt, that.createdAt) && Objects.equals(updatedAt, that.updatedAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, customerId, terminalType, address, status);
+        return Objects.hash(id, status, customerId, terminalType, address, terminalId, trackingId, createdAt, updatedAt);
     }
 }
