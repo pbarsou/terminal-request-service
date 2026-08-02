@@ -9,8 +9,6 @@ public class ObjectMapperConfig {
 
     @Bean
     public ObjectMapper objectMapper() {
-        // Cria um ObjectMapper sem depender da auto-config do Spring Boot.
-        // Para serialização/leitura de Map (JSON simples) já é suficiente.
         return new ObjectMapper();
     }
 }

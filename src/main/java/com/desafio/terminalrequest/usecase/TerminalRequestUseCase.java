@@ -7,7 +7,7 @@ import com.desafio.terminalrequest.domain.enums.TerminalType;
 import com.desafio.terminalrequest.domain.exceptions.TerminalRequestNotFoundException;
 import com.desafio.terminalrequest.domain.exceptions.TerminalRequestProcessException;
 import com.desafio.terminalrequest.domain.service.CustomerValidationServicePort;
-import com.desafio.terminalrequest.domain.service.DeliveryServicePort;
+import com.desafio.terminalrequest.domain.service.DeliverySchedulingServicePort;
 import com.desafio.terminalrequest.domain.service.TerminalRequestServicePort;
 import com.desafio.terminalrequest.domain.service.TerminalReservationServicePort;
 import org.slf4j.Logger;
@@ -26,13 +26,13 @@ public class TerminalRequestUseCase {
     private final TerminalRequestServicePort terminalRequestService;
     private final CustomerValidationServicePort customerService;
     private final TerminalReservationServicePort terminalReservationService;
-    private final DeliveryServicePort deliveryService;
+    private final DeliverySchedulingServicePort deliveryService;
 
     public TerminalRequestUseCase(
             TerminalRequestServicePort terminalRequestService,
             CustomerValidationServicePort customerService,
             TerminalReservationServicePort terminalReservationService,
-            DeliveryServicePort deliveryService
+            DeliverySchedulingServicePort deliveryService
     ) {
         this.terminalRequestService = terminalRequestService;
         this.customerService = customerService;
@@ -98,15 +98,16 @@ public class TerminalRequestUseCase {
     private void processDelivery(TerminalRequest request, UUID terminalId) {
         logger.debug("Scheduling delivery for terminal: {}", terminalId);
 
-        UUID deliveryId = deliveryService.scheduleDelivery(request.getAddress(), request.getId(), terminalId);
+        UUID trackingId = deliveryService.scheduleDelivery(request.getAddress(), request.getId(), terminalId);
 
-        if (deliveryId == null) {
+        if (trackingId == null) {
             terminalRequestService.updateStatus(request.getId(), TerminalRequestsStatus.ERRO_AGENDAMENTO);
             logger.error("Failed to schedule delivery for request {}. Terminal ID: {}", request.getId(), terminalId);
+            return;
         }
 
         terminalRequestService.updateStatus(request.getId(), TerminalRequestsStatus.AGENDADO);
-        terminalRequestService.assignTracking(request.getId(), deliveryId);
-        logger.info("Delivery scheduled for request {}. Delivery ID: {}", request.getId(), deliveryId);
+        terminalRequestService.assignTracking(request.getId(), trackingId);
+        logger.info("Delivery scheduled for request {}. Delivery ID: {}", request.getId(), trackingId);
     }
 }

@@ -1,7 +1,7 @@
 package com.desafio.terminalrequest.infrastructure.adapter;
 
 import com.desafio.terminalrequest.domain.entity.terminalrequest.Address;
-import com.desafio.terminalrequest.domain.service.DeliveryServicePort;
+import com.desafio.terminalrequest.domain.service.DeliverySchedulingServicePort;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -16,14 +16,14 @@ import java.util.UUID;
 
 @Component
 @ConditionalOnProperty(name = "aws.lambda.enabled", havingValue = "true")
-public class LambdaDeliveryServiceAdapter implements DeliveryServicePort {
+public class LambdaDeliverySchedulingServiceAdapter implements DeliverySchedulingServicePort {
 
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
     private final String functionUrl;
 
-    public LambdaDeliveryServiceAdapter(ObjectMapper objectMapper,
-                                        @Value("${aws.lambda.delivery-function}") String functionUrl) {
+    public LambdaDeliverySchedulingServiceAdapter(ObjectMapper objectMapper,
+                                                  @Value("${aws.lambda.delivery-function}") String functionUrl) {
         this.httpClient = HttpClient.newHttpClient();
         this.objectMapper = objectMapper;
         this.functionUrl = functionUrl.trim();

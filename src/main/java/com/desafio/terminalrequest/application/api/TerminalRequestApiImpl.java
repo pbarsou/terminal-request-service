@@ -3,6 +3,7 @@ package com.desafio.terminalrequest.application.api;
 import com.desafio.terminalrequest.application.api.command.CreateTerminalCommand;
 import com.desafio.terminalrequest.domain.entity.terminalrequest.TerminalRequest;
 import com.desafio.terminalrequest.domain.service.TerminalRequestServicePort;
+import com.desafio.terminalrequest.usecase.CreateTerminalRequestUseCase;
 import com.desafio.terminalrequest.usecase.TerminalRequestUseCase;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,18 +15,20 @@ import java.util.UUID;
 public class TerminalRequestApiImpl implements TerminalRequestApi{
 
     private final TerminalRequestServicePort terminalRequestService;
-    private final TerminalRequestUseCase terminalRequestUseCase;
+    private final CreateTerminalRequestUseCase createTerminalRequestUseCase;
 
-    public TerminalRequestApiImpl(TerminalRequestServicePort terminalRequestService, TerminalRequestUseCase terminalRequestUseCase) {
+    public TerminalRequestApiImpl(
+            TerminalRequestServicePort terminalRequestService,
+            CreateTerminalRequestUseCase createTerminalRequestUseCase
+    ) {
         this.terminalRequestService = terminalRequestService;
-        this.terminalRequestUseCase = terminalRequestUseCase;
+        this.createTerminalRequestUseCase = createTerminalRequestUseCase;
     }
 
     @PostMapping
     @Override
-    public ResponseEntity<TerminalRequest> createTerminalRequest(@RequestBody CreateTerminalCommand request) {
-        terminalRequestUseCase.execute(request);
-        return ResponseEntity.ok().body(null);
+    public ResponseEntity<UUID> createTerminalRequest(@RequestBody CreateTerminalCommand request) {
+        return ResponseEntity.ok().body(createTerminalRequestUseCase.execute(request));
     }
 
     @GetMapping("/{id}")

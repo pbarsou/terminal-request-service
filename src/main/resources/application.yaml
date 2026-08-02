@@ -37,4 +37,5 @@ aws:
     enabled: ${AWS_LAMBDA_ENABLED:true}
     customer-validation-function: ${AWS_LAMBDA_CUSTOMER_VALIDATION_FUNCTION:}
     terminal-reservation-function: ${AWS_LAMBDA_TERMINAL_RESERVATION_FUNCTION:}
+    terminal-reservation-compensator-function: ${AWS_LAMBDA_TERMINAL_RESERVATION_COMPENSATOR_FUNCTION:}
     delivery-function: ${AWS_LAMBDA_DELIVERY_FUNCTION:}
