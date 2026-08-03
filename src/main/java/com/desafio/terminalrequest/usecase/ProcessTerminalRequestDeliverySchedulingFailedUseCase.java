@@ -1,6 +1,6 @@
 package com.desafio.terminalrequest.usecase;
 
-import com.desafio.terminalrequest.domain.events.TerminalReservationReservationConfirmed;
+import com.desafio.terminalrequest.domain.events.TerminalRequestDeliverySchedulingFailed;
 import com.desafio.terminalrequest.domain.service.TerminalReservationCompensatorServicePort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,7 @@ public class ProcessTerminalRequestDeliverySchedulingFailedUseCase {
         this.compensatorService = compensatorService;
     }
 
-    public void execute(TerminalReservationReservationConfirmed event) {
+    public void execute(TerminalRequestDeliverySchedulingFailed event) {
         logger.debug("Compensating delivery scheduling failure for terminal: {}", event.terminalId());
 
         compensatorService.release(event.terminalId(), event.terminalRequestId());

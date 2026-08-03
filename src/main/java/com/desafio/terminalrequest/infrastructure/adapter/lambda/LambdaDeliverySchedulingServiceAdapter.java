@@ -1,6 +1,7 @@
-package com.desafio.terminalrequest.infrastructure.adapter;
+package com.desafio.terminalrequest.infrastructure.adapter.lambda;
 
 import com.desafio.terminalrequest.domain.entity.terminalrequest.Address;
+import com.desafio.terminalrequest.domain.exceptions.DeliverySchedulingException;
 import com.desafio.terminalrequest.domain.service.DeliverySchedulingServicePort;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,9 +21,10 @@ public class LambdaDeliverySchedulingServiceAdapter implements DeliverySchedulin
     private final ObjectMapper objectMapper;
     private final String functionUrl;
 
-    public LambdaDeliverySchedulingServiceAdapter(ObjectMapper objectMapper,
+    public LambdaDeliverySchedulingServiceAdapter(HttpClient httpClient,
+                                                  ObjectMapper objectMapper,
                                                   @Value("${aws.lambda.delivery-function}") String functionUrl) {
-        this.httpClient = HttpClient.newHttpClient();
+        this.httpClient = httpClient;
         this.objectMapper = objectMapper;
         this.functionUrl = functionUrl.trim();
     }
@@ -50,8 +52,8 @@ public class LambdaDeliverySchedulingServiceAdapter implements DeliverySchedulin
 
             return objectMapper.readValue(response.body(), LambdaDeliveryResponse.class).trackingId();
 
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to schedule delivery via Lambda", e);
+        } catch (Exception exception) {
+            throw new DeliverySchedulingException("Failed to schedule delivery", exception);
         }
     }
 

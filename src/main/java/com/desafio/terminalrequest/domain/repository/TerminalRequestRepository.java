@@ -11,5 +11,4 @@ import java.util.UUID;
 public interface TerminalRequestRepository {
     TerminalRequest save(final TerminalRequest terminalRequest);
     Optional<TerminalRequest> getById(final UUID id);
-    List<TerminalRequest> findAll();
 }

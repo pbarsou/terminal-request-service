@@ -31,14 +31,6 @@ public class TerminalRequestRepositoryImpl implements TerminalRequestRepository 
     public Optional<TerminalRequest> getById(UUID id) {
         return postgresRepository.findById(id).map(TerminalRequestTable::toDomain);
     }
-
-    @Override
-    public List<TerminalRequest> findAll() {
-        return postgresRepository.findAll(Sort.by(Sort.Direction.DESC, "updatedAt"))
-                .stream()
-                .map(TerminalRequestTable::toDomain)
-                .collect(Collectors.toList());
-    }
 }
 
 @Repository

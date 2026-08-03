@@ -1,6 +1,6 @@
 package com.desafio.terminalrequest.usecase;
 
-import com.desafio.terminalrequest.application.api.command.CreateTerminalCommand;
+import com.desafio.terminalrequest.application.api.command.CreateTerminalRequestCommand;
 import com.desafio.terminalrequest.domain.entity.terminalrequest.TerminalRequest;
 import com.desafio.terminalrequest.domain.events.TerminalRequestCreated;
 import com.desafio.terminalrequest.domain.service.TerminalRequestServicePort;
@@ -26,7 +26,7 @@ public class CreateTerminalRequestUseCase {
         this.publisher = publisher;
     }
 
-    public UUID execute(CreateTerminalCommand command) {
+    public UUID execute(CreateTerminalRequestCommand command) {
         logger.debug("Creating a new terminal request for customer: {}", command.customerId());
         TerminalRequest terminalRequest = new TerminalRequest(
                 command.customerId(),

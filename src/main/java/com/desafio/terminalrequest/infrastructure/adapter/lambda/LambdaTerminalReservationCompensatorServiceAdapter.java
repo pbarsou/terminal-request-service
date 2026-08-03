@@ -1,5 +1,6 @@
-package com.desafio.terminalrequest.infrastructure.adapter;
+package com.desafio.terminalrequest.infrastructure.adapter.lambda;
 
+import com.desafio.terminalrequest.domain.exceptions.TerminalReservationCompensationFailureException;
 import com.desafio.terminalrequest.domain.service.TerminalReservationCompensatorServicePort;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -23,10 +24,11 @@ public class LambdaTerminalReservationCompensatorServiceAdapter implements Termi
     private final String functionUrl;
 
     public LambdaTerminalReservationCompensatorServiceAdapter(
+            HttpClient httpClient,
             ObjectMapper objectMapper,
             @Value("${aws.lambda.terminal-reservation-compensator-function}") String functionUrl
     ) {
-        this.httpClient = HttpClient.newHttpClient();
+        this.httpClient = httpClient;
         this.objectMapper = objectMapper;
         this.functionUrl = functionUrl.trim();
     }
@@ -48,14 +50,14 @@ public class LambdaTerminalReservationCompensatorServiceAdapter implements Termi
             var response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() >= 400) {
-                logger.error("Failed to release terminal reservation via Lambda. Status: {}, Body: {}", 
+                logger.error("Failed to release terminal reservation. Status: {}, Body: {}",
                         response.statusCode(), response.body());
             } else {
                 logger.info("Terminal reservation release request sent successfully for terminalId: {}", terminalId);
             }
 
         } catch (Exception e) {
-            logger.error("Unexpected error while calling Terminal Reservation Compensator Lambda", e);
+            throw new TerminalReservationCompensationFailureException("Unexpected error while calling Terminal Reservation Compensator Lambda", e);
         }
     }
 }

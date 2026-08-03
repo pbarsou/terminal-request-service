@@ -1,9 +1,9 @@
-package com.desafio.terminalrequest.infrastructure.config;
+package com.desafio.terminalrequest.infrastructure.config.exception;
 
 import com.desafio.terminalrequest.domain.exceptions.BusinessException;
 import com.desafio.terminalrequest.domain.exceptions.TerminalRequestNotFoundException;
-import com.desafio.terminalrequest.infrastructure.config.dto.ResourceError;
-import com.desafio.terminalrequest.infrastructure.config.dto.ResourceFieldError;
+import com.desafio.terminalrequest.infrastructure.config.exception.dto.ResourceError;
+import com.desafio.terminalrequest.infrastructure.config.exception.dto.ResourceFieldError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -42,8 +42,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleBusinessException(
             BusinessException ex,
             WebRequest request) {
-        HttpStatus status = ex.getHttpStatus() != null ? ex.getHttpStatus() : HttpStatus.UNPROCESSABLE_ENTITY;
-        ResourceError errorBody = new ResourceError(status.value(), "Business Error", ex.getMessage());
+        HttpStatus status = ex.getCode() != null ? ex.getCode() : HttpStatus.UNPROCESSABLE_ENTITY;
+        String title = ex.getReason() != null ? ex.getReason() : "Business Error";
+        ResourceError errorBody = new ResourceError(status.value(), title, ex.getMessage());
         ResponseEntity<Object> response = handleExceptionInternal(ex, errorBody, new HttpHeaders(), status, request);
         logger.error("{}", errorBody, ex);
         return response;

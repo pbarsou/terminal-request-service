@@ -16,18 +16,18 @@ public class ProcessTerminalRequestCustomerValidatedUseCase {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final ApplicationEventPublisher publisher;
     private final TerminalRequestServicePort terminalRequestService;
     private final TerminalReservationServicePort terminalReservationService;
+    private final ApplicationEventPublisher publisher;
 
     public ProcessTerminalRequestCustomerValidatedUseCase(
-            ApplicationEventPublisher publisher,
             TerminalRequestServicePort terminalRequestService,
-            TerminalReservationServicePort terminalReservationService
+            TerminalReservationServicePort terminalReservationService,
+            ApplicationEventPublisher publisher
     ) {
-        this.publisher = publisher;
         this.terminalRequestService = terminalRequestService;
         this.terminalReservationService = terminalReservationService;
+        this.publisher = publisher;
     }
 
     public void execute(TerminalRequestCustomerValidated event) {

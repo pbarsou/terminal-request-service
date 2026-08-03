@@ -1,7 +1,6 @@
 package com.desafio.terminalrequest.application.listeners.events;
 
-import com.desafio.terminalrequest.domain.events.TerminalReservationReservationConfirmed;
-
+import com.desafio.terminalrequest.domain.events.TerminalRequestDeliverySchedulingFailed;
 import com.desafio.terminalrequest.usecase.ProcessTerminalRequestDeliverySchedulingFailedUseCase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +23,7 @@ public class TerminalRequestDeliverySchedulingFailedListener {
 
     @Async
     @EventListener
-    public void handleRequest(TerminalReservationReservationConfirmed event) {
+    public void handleRequest(TerminalRequestDeliverySchedulingFailed event) {
         logger.debug("Compensating delivery scheduling failure for terminal: {}", event.terminalId());
         processDeliverySchedulingFailedUseCase.execute(event);
     }

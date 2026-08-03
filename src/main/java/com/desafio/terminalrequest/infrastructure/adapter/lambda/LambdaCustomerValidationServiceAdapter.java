@@ -1,5 +1,6 @@
-package com.desafio.terminalrequest.infrastructure.adapter;
+package com.desafio.terminalrequest.infrastructure.adapter.lambda;
 
+import com.desafio.terminalrequest.domain.exceptions.CustomerValidationFailureException;
 import com.desafio.terminalrequest.domain.service.CustomerValidationServicePort;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,9 +19,10 @@ public class LambdaCustomerValidationServiceAdapter implements CustomerValidatio
     private final ObjectMapper objectMapper;
     private final String functionUrl;
 
-    public LambdaCustomerValidationServiceAdapter(ObjectMapper objectMapper,
+    public LambdaCustomerValidationServiceAdapter(HttpClient httpClient,
+                                                  ObjectMapper objectMapper,
                                                   @Value("${aws.lambda.customer-validation-function}") String functionUrl) {
-        this.httpClient = HttpClient.newHttpClient();
+        this.httpClient = httpClient;
         this.objectMapper = objectMapper;
         this.functionUrl = functionUrl.trim();
     }
@@ -38,12 +40,12 @@ public class LambdaCustomerValidationServiceAdapter implements CustomerValidatio
 
             var response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
-            return objectMapper.readValue(response.body(), LambdaCustomerValidationReponse.class).active();
+            return objectMapper.readValue(response.body(), LambdaCustomerValidationResponse.class).active();
 
-        } catch (Exception e) {
-            throw new IllegalStateException("Falha na validação do cliente", e);
+        } catch (Exception exception) {
+            throw new CustomerValidationFailureException("Customer validation failure", exception);
         }
     }
 
-    public record LambdaCustomerValidationReponse(Boolean active) { }
+    public record LambdaCustomerValidationResponse(Boolean active) { }
 }

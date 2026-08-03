@@ -1,4 +1,4 @@
-package com.desafio.terminalrequest.infrastructure.config.dto;
+package com.desafio.terminalrequest.infrastructure.config.exception.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;

@@ -1,0 +1,36 @@
+package com.desafio.terminalrequest.application.listeners.events;
+
+import com.desafio.terminalrequest.domain.events.TerminalRequestCustomerValidated;
+import com.desafio.terminalrequest.fixtures.TerminalRequestFixture;
+import com.desafio.terminalrequest.usecase.ProcessTerminalRequestCustomerValidatedUseCase;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.mockito.Mockito.verify;
+
+@ExtendWith(MockitoExtension.class)
+class TerminalRequestCustomerValidatedListenerTest {
+
+    @Mock
+    private ProcessTerminalRequestCustomerValidatedUseCase useCase;
+
+    @InjectMocks
+    private TerminalRequestCustomerValidatedListener listener;
+
+    @Test
+    void shouldCallUseCaseWhenEventReceived() {
+        var terminalRequest = TerminalRequestFixture.createTerminalRequest();
+        var event = new TerminalRequestCustomerValidated(
+                terminalRequest.getTerminalType(),
+                terminalRequest.getId(),
+                terminalRequest.getAddress()
+        );
+
+        listener.handleRequest(event);
+
+        verify(useCase).execute(event);
+    }
+}

@@ -4,6 +4,6 @@ import org.springframework.http.HttpStatus;
 
 public class TerminalRequestNotFoundException extends BusinessException {
     public TerminalRequestNotFoundException(String message) {
-        super(message, HttpStatus.NOT_FOUND);
+        super(message, HttpStatus.NOT_FOUND, "Entity Not Found");
     }
 }

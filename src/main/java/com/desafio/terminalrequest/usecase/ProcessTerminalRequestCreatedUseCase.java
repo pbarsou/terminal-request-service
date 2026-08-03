@@ -15,18 +15,19 @@ public class ProcessTerminalRequestCreatedUseCase {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final ApplicationEventPublisher publisher;
     private final TerminalRequestServicePort terminalRequestService;
     private final CustomerValidationServicePort customerService;
+    private final ApplicationEventPublisher publisher;
+
 
     public ProcessTerminalRequestCreatedUseCase(
-            ApplicationEventPublisher publisher,
             TerminalRequestServicePort terminalRequestService,
-            CustomerValidationServicePort customerService
+            CustomerValidationServicePort customerService,
+            ApplicationEventPublisher publisher
     ) {
-        this.publisher = publisher;
         this.terminalRequestService = terminalRequestService;
         this.customerService = customerService;
+        this.publisher = publisher;
     }
 
     public void execute(TerminalRequestCreated event) {

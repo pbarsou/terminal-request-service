@@ -17,18 +17,19 @@ public class ProcessTerminalRequestReservationConfirmedUseCase {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final ApplicationEventPublisher publisher;
     private final TerminalRequestServicePort terminalRequestService;
     private final DeliverySchedulingServicePort deliveryService;
+    private final ApplicationEventPublisher publisher;
+
 
     public ProcessTerminalRequestReservationConfirmedUseCase(
-            ApplicationEventPublisher publisher,
             TerminalRequestServicePort terminalRequestService,
-            DeliverySchedulingServicePort deliveryService
-    ) {
-        this.publisher = publisher;
+            DeliverySchedulingServicePort deliveryService,
+            ApplicationEventPublisher publisher
+            ) {
         this.terminalRequestService = terminalRequestService;
         this.deliveryService = deliveryService;
+        this.publisher = publisher;
     }
 
     public void execute (TerminalReservationReservationConfirmed event) {
