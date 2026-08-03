@@ -1,0 +1,230 @@
+openapi: 3.0.3
+
+info:
+  title: Terminal Request Service API
+  description: API para gerenciamento do fluxo de solicitações e reservas de terminais POS.
+  version: "1.0"
+
+servers:
+  - url: http://localhost:8080
+    description: Local Environment
+
+tags:
+  - name: Terminal Request
+    description: Operações relacionadas ao ciclo de vida de uma solicitação de terminal POS.
+
+paths:
+  /terminal-request:
+    post:
+      tags:
+        - Terminal Request
+      summary: Criar nova solicitação de terminal
+      description: Inicia o processo de solicitação de um terminal POS para um cliente.
+      operationId: createTerminalRequest
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTerminalCommand"
+      responses:
+        "200":
+          description: Solicitação criada com sucesso
+          content:
+            application/json:
+              schema:
+                type: string
+                format: uuid
+                example: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        "400":
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResourceError"
+        "500":
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResourceError"
+
+  /terminal-request/{id}:
+    get:
+      tags:
+        - Terminal Request
+      summary: Buscar solicitação por ID
+      description: Retorna os detalhes completos de uma solicitação de terminal existente.
+      operationId: findTerminalRequestById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: UUID da solicitação de terminal
+          schema:
+            type: string
+            format: uuid
+          example: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TerminalRequest"
+        "404":
+          description: Solicitação não encontrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResourceError"
+        "400":
+          description: ID inválido
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResourceError"
+        "500":
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResourceError"
+
+components:
+  schemas:
+    TerminalRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        status:
+          $ref: "#/components/schemas/TerminalRequestsStatus"
+        customerId:
+          type: string
+          example: "CUST-123"
+        terminalType:
+          $ref: "#/components/schemas/TerminalType"
+        terminalId:
+          type: string
+          format: uuid
+          nullable: true
+          example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+        trackingId:
+          type: string
+          format: uuid
+          nullable: true
+          example: "e58ed763-928c-4155-bee9-fdbaaadc15f3"
+        address:
+          $ref: "#/components/schemas/Address"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2026-08-03T10:00:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2026-08-03T10:05:00Z"
+
+    CreateTerminalCommand:
+      type: object
+      required:
+        - customerId
+        - terminalType
+        - address
+      properties:
+        customerId:
+          type: string
+          example: "CUST-123"
+        terminalType:
+          $ref: "#/components/schemas/TerminalType"
+        address:
+          $ref: "#/components/schemas/Address"
+
+    Address:
+      type: object
+      required:
+        - street
+        - number
+        - city
+        - state
+        - zipCode
+      properties:
+        street:
+          type: string
+          example: "Rua Exemplo"
+        number:
+          type: string
+          example: "100"
+        city:
+          type: string
+          example: "São Paulo"
+        state:
+          type: string
+          example: "SP"
+        zipCode:
+          type: string
+          example: "01000-000"
+
+    TerminalRequestsStatus:
+      type: string
+      enum:
+        - SOLICITADO
+        - VALIDADO
+        - RESERVADO
+        - AGENDADO
+        - REJEITADO
+        - ERRO_RESERVA
+        - ERRO_AGENDAMENTO
+      example: "AGENDADO"
+
+    TerminalType:
+      type: string
+      enum:
+        - POS_WIFI
+        - POS_5G
+      example: "POS_WIFI"
+
+    ResourceError:
+      type: object
+      required:
+        - status
+        - title
+        - timestamp
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Código de status HTTP
+        title:
+          type: string
+          description: Título curto do erro
+        detail:
+          type: string
+          description: Mensagem detalhada do erro
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp do momento do erro
+        error_fields:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResourceFieldError"
+
+    ResourceFieldError:
+      type: object
+      required:
+        - field
+        - message
+      properties:
+        field:
+          type: string
+          description: Nome do campo com erro
+        message:
+          type: string
+          description: Mensagem de erro específica do campo
+        rejected_value:
+          type: object
+          description: Valor que foi rejeitado pela validação
