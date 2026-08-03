@@ -5,10 +5,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
+    show-sql: false
 
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -28,6 +25,9 @@ spring:
     clean-disabled: true
 
 logging:
+  level:
+    root: INFO
+    com.desafio.terminalrequest: INFO
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} %-5p [%t] %X{dd.trace_id} %X{dd.span_id} %c{1} - %m%n"
 
@@ -35,7 +35,7 @@ aws:
   region: ${AWS_REGION:us-east-1}
   lambda:
     enabled: ${AWS_LAMBDA_ENABLED:true}
-    customer-validation-function: ${AWS_LAMBDA_CUSTOMER_VALIDATION_FUNCTION:}
-    terminal-reservation-function: ${AWS_LAMBDA_TERMINAL_RESERVATION_FUNCTION:}
-    terminal-reservation-compensator-function: ${AWS_LAMBDA_TERMINAL_RESERVATION_COMPENSATOR_FUNCTION:}
-    delivery-function: ${AWS_LAMBDA_DELIVERY_FUNCTION:}
+    customer-validation-function: ${AWS_LAMBDA_CUSTOMER_VALIDATION_FUNCTION:http://localhost:4566/2015-03-31/functions/customer-validation/invocations}
+    terminal-reservation-function: ${AWS_LAMBDA_TERMINAL_RESERVATION_FUNCTION:http://localhost:4566/2015-03-31/functions/terminal-reservation/invocations}
+    terminal-reservation-compensator-function: ${AWS_LAMBDA_TERMINAL_RESERVATION_COMPENSATOR_FUNCTION:http://localhost:4566/2015-03-31/functions/terminal-reservation-compensator/invocations}
+    delivery-function: ${AWS_LAMBDA_DELIVERY_FUNCTION:http://localhost:4566/2015-03-31/functions/delivery-scheduling/invocations}

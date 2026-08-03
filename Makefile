@@ -28,20 +28,20 @@ down-infra:
 run:
 	./mvnw spring-boot:run
 
-test:
+verify:
 	./mvnw clean verify
 
 unit:
 	./mvnw clean test
 
 it-integrated:
-	./mvnw clean verify -DskipUnitTests=true -Ddetekt.skip=true -DskipPactTests=true -DskipCoreITs=false
+	./mvnw clean verify -DskipUnitTests=true -DskipPactTests=true -DskipCoreITs=false
 
 format:
-	./mvnw detekt:check -Ddetekt.config=detekt-custom-rules.yml
+	./mvnw fmt:format
 
 install:
 	./mvnw clean install
 
 package:
-	./mvnw clean package -DskipUnitTests=true -DskipPactTests=true -DskipCoreITs=true -Ddetekt.skip=true
+	./mvnw clean package -DskipUnitTests=true -DskipPactTests=true -DskipCoreITs=true

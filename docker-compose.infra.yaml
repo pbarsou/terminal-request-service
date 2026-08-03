@@ -24,12 +24,26 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: terminal_request_service
+      POSTGRES_PASSWORD: terminal_request_service
+      POSTGRES_DB: terminal_request_service
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  localstack:
+    image: localstack/localstack:3.8
+    container_name: localstack_main
+    ports:
+      - "127.0.0.1:4566:4566"
+    environment:
+      - DEBUG=0
+      - LS_LOG=error
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "./docker/localstack/init:/etc/localstack/init/ready.d"
+      - "./docker/localstack/lambdas:/tmp/lambdas"
+      - "/var/run/docker.sock:/var/run/docker.sock"
 
 volumes:
   postgres_data:

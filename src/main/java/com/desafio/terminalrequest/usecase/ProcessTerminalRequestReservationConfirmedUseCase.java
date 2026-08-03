@@ -46,6 +46,7 @@ public class ProcessTerminalRequestReservationConfirmedUseCase {
                     event.terminalId(),
                     event.terminalRequestId()
             ));
+            return;
         }
 
         terminalRequestService.updateStatus(event.terminalRequestId(), TerminalRequestsStatus.AGENDADO);
