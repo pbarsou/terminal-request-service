@@ -3,7 +3,6 @@ package com.desafio.terminalrequest.infrastructure.adapter;
 import com.desafio.terminalrequest.domain.service.CustomerValidationServicePort;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
@@ -13,7 +12,6 @@ import java.net.http.HttpResponse;
 import java.util.Map;
 
 @Component
-@ConditionalOnProperty(name = "aws.lambda.enabled", havingValue = "true")
 public class LambdaCustomerValidationServiceAdapter implements CustomerValidationServicePort {
 
     private final HttpClient httpClient;

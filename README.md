@@ -18,6 +18,17 @@ Máquina de estados:
 *   **ERRO_RESERVA**: Falha na reserva do terminal (ex: falta de estoque).
 *   **ERRO_AGENDAMENTO**: Falha no agendamento da entrega.
 
+## Simulação de Estados
+
+Para facilitar os testes, a aplicação (e as Lambdas no LocalStack) possuem regras de negócio para simular os diferentes cenários:
+
+| Status Alvo | Critério de Simulação                                                                                      |
+| :--- |:-----------------------------------------------------------------------------------------------------------|
+| **REJEITADO** | `customerId` começando com `"INVALID"` ou `"INACTIVE"`.                                                    |
+| **ERRO_RESERVA** | `terminalType` definido como `POS_5G`. Esse tipo de POS está em fase de implantação.                       |
+| **ERRO_AGENDAMENTO** | `address.state` sendo: `"BA"`, `"ES"` ou `"AM"`. O nosso serviço de entrega ainda não atua nessas regiões. |
+| **AGENDADO** | Qualquer outro cenário válido.                                                                             |
+
 ## Arquitetura e Decisões Técnicas
 
 O projeto foi desenvolvido seguindo os princípios da **Arquitetura Hexagonal (Ports and Adapters)** para garantir desacoplamento entre a lógica de domínio e as tecnologias externas.
@@ -114,4 +125,4 @@ Para garantir a qualidade e o cumprimento dos requisitos, foram implementados te
 
 1.  **Mensageria**: Utilizar um broker real (SQS, RabbitMQ ou Kafka) para garantir a persistência dos eventos em caso de queda da aplicação e garantir re-try.
 2.  **Idempotência**: Implementar controle de idempotência no processamento de eventos para evitar duplicidade em casos de re-try.
-5.  **Circuit Breaker**: Adicionar um Circuit Breaker para lidar com falhas nas integrações externas, tornando a aplicação mais resiliente.
+3.  **Circuit Breaker**: Adicionar um Circuit Breaker para lidar com falhas nas integrações externas, tornando a aplicação mais resiliente.

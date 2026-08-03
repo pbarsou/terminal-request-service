@@ -4,7 +4,6 @@ import com.desafio.terminalrequest.domain.entity.terminalrequest.Address;
 import com.desafio.terminalrequest.domain.service.DeliverySchedulingServicePort;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
@@ -15,7 +14,6 @@ import java.util.Map;
 import java.util.UUID;
 
 @Component
-@ConditionalOnProperty(name = "aws.lambda.enabled", havingValue = "true")
 public class LambdaDeliverySchedulingServiceAdapter implements DeliverySchedulingServicePort {
 
     private final HttpClient httpClient;
