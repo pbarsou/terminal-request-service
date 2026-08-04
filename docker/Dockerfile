@@ -16,10 +16,10 @@ COPY --from=build /build/extracted/application/ /app/application/
 
 EXPOSE 8080
 
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS \
+ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} \
   -javaagent:/app/dd-java-agent.jar \
-  -Ddd.service=${DD_SERVICE} \
-  -Ddd.env=${DD_ENV} \
-  -Ddd.version=${DD_VERSION} \
+  -Ddd.service=${DD_SERVICE:-terminal-request-service} \
+  -Ddd.env=${DD_ENV:-local} \
+  -Ddd.version=${DD_VERSION:-1.0.0} \
   -cp \"/app/application/*:/app/lib/*\" \
   com.desafio.terminalrequest.TerminalRequestApplication"]
