@@ -5,17 +5,16 @@ import com.desafio.terminalrequest.domain.entity.terminalrequest.TerminalRequest
 import com.desafio.terminalrequest.domain.events.TerminalRequestCreated;
 import com.desafio.terminalrequest.domain.service.TerminalRequestServicePort;
 import com.desafio.terminalrequest.fixtures.TerminalRequestCommandFixture;
-import com.desafio.terminalrequest.fixtures.TerminalRequestFixture;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
-
 import java.util.UUID;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -38,6 +37,7 @@ class CreateTerminalRequestUseCaseTest {
     }
 
     @Test
+    @DisplayName("Should create terminal request and publish TerminalRequestCreated event")
     void shouldCreateTerminalRequest() {
         CreateTerminalRequestCommand command = TerminalRequestCommandFixture.createCommand();
         TerminalRequest savedRequest = new TerminalRequest(command.customerId(), command.terminalType(), command.address());
@@ -47,10 +47,10 @@ class CreateTerminalRequestUseCaseTest {
 
         assertThat(resultId).isEqualTo(savedRequest.getId());
         verify(terminalRequestService).insertTerminalRequest(any(TerminalRequest.class));
-        
+
         ArgumentCaptor<TerminalRequestCreated> eventCaptor = ArgumentCaptor.forClass(TerminalRequestCreated.class);
         verify(publisher).publishEvent(eventCaptor.capture());
-        
+
         TerminalRequestCreated publishedEvent = eventCaptor.getValue();
         assertThat(publishedEvent.customerId()).isEqualTo(command.customerId());
         assertThat(publishedEvent.terminalRequestId()).isEqualTo(savedRequest.getId());

@@ -4,6 +4,7 @@ import com.desafio.terminalrequest.domain.exceptions.DeliverySchedulingException
 import com.desafio.terminalrequest.fixtures.AddressFixture;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -39,13 +40,13 @@ class LambdaDeliverySchedulingServiceAdapterTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
+    @DisplayName("Should return tracking ID when scheduling successfully")
     void shouldReturnTrackingIdWhenSchedulingIsSuccessful() throws IOException, InterruptedException {
         UUID requestId = UUID.randomUUID();
         UUID terminalId = UUID.randomUUID();
         UUID trackingId = UUID.randomUUID();
         String responseBody = "{\"trackingId\": \"" + trackingId + "\"}";
-        
+
         when(httpResponse.statusCode()).thenReturn(200);
         when(httpResponse.body()).thenReturn(responseBody);
         when(httpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class))).thenReturn(httpResponse);
@@ -56,7 +57,7 @@ class LambdaDeliverySchedulingServiceAdapterTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
+    @DisplayName("Should return null when Lambda function returns error")
     void shouldReturnNullWhenLambdaReturnsError() throws IOException, InterruptedException {
         when(httpResponse.statusCode()).thenReturn(400);
         when(httpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class))).thenReturn(httpResponse);
@@ -67,7 +68,7 @@ class LambdaDeliverySchedulingServiceAdapterTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
+    @DisplayName("Should throw exception when Lambda function call fails")
     void shouldThrowExceptionWhenLambdaCallFails() throws IOException, InterruptedException {
         when(httpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class))).thenThrow(new IOException("Connection error"));
 

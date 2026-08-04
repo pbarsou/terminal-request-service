@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>4.1.0</version>
+		<version>4.0.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.desafio</groupId>
@@ -31,16 +31,22 @@
 		<java.version>21</java.version>
 		<server.port>8080</server.port>
 		<skipUnitTests>false</skipUnitTests>
+		<skipITs>false</skipITs>
 
 		<!-- dependencies properties -->
 		<jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
 		<maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
 		<maven-failsafe-plugin.version>3.2.5</maven-failsafe-plugin.version>
 
+		<testcontainers.version>1.21.4</testcontainers.version>
+		<junit-jupiter.version>6.0.3</junit-jupiter.version>
 		<docker-maven-plugin.version>0.48.1</docker-maven-plugin.version>
 		<jacoco-required-line-coverage>0.90</jacoco-required-line-coverage>
 		<jacoco-required-branch-coverage>0.90</jacoco-required-branch-coverage>
+		<jacoco.surefireArgLine/>
+		<jacoco.failsafeArgLine/>
 	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -119,17 +125,57 @@
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator-test</artifactId>
+			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa-test</artifactId>
-			<scope>test</scope>
-		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webmvc-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-restclient</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-testcontainers</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-test-autoconfigure</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>${testcontainers.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>${testcontainers.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-compress</artifactId>
+			<version>1.28.0</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -243,8 +289,6 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${maven-surefire-plugin.version}</version>
 				<configuration>
-					<!--suppress UnresolvedMavenProperty -->
-					<argLine>${jacoco.surefireArgLine}</argLine>
 					<systemPropertyVariables>
 						<logging.level.ROOT>ERROR</logging.level.ROOT>
 						<logging.level.org.springframework>OFF</logging.level.org.springframework>
@@ -263,6 +307,8 @@
 							<goal>test</goal>
 						</goals>
 						<configuration>
+							<!--suppress UnresolvedMavenProperty -->
+							<argLine>@{jacoco.surefireArgLine} -Dapi.version=1.44</argLine>
 							<skipTests>${skipUnitTests}</skipTests>
 							<includes>
 								<include>**/*Test.java</include>
@@ -277,7 +323,7 @@
 				<version>${maven-failsafe-plugin.version}</version>
 				<configuration>
 					<!--suppress UnresolvedMavenProperty -->
-					<argLine>${jacoco.failsafeArgLine}</argLine>
+					<argLine>@{jacoco.failsafeArgLine} -Dapi.version=1.44</argLine>
 				</configuration>
 				<executions>
 					<execution>
@@ -287,6 +333,7 @@
 							<goal>verify</goal>
 						</goals>
 						<configuration>
+							<skipTests>${skipITs}</skipTests>
 							<includes>
 								<include>**/*IT.java</include>
 							</includes>
@@ -337,6 +384,9 @@
 						<goals>
 							<goal>report</goal>
 						</goals>
+						<configuration>
+							<dataFile>${project.build.directory}/jacoco/all-tests.exec</dataFile>
+						</configuration>
 					</execution>
 					<execution>
 						<id>jacoco-merge-executions</id>
@@ -387,10 +437,10 @@
 				</executions>
 				<configuration>
 					<excludes>
-						<exclude>**/dto/*</exclude>
-						<exclude>**/domain/repository/*</exclude>
-						<exclude>**/config/**/*</exclude>
-						<exclude>**/api/*</exclude>
+						<exclude>**/dto/**</exclude>
+						<exclude>**/domain/repository/**</exclude>
+						<exclude>**/config/**</exclude>
+						<exclude>**/api/**</exclude>
 						<exclude>**/TerminalRequestApplication*</exclude>
 					</excludes>
 				</configuration>

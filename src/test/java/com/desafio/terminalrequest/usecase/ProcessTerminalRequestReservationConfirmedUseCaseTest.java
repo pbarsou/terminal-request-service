@@ -2,13 +2,13 @@ package com.desafio.terminalrequest.usecase;
 
 import com.desafio.terminalrequest.domain.entity.terminalrequest.TerminalRequest;
 import com.desafio.terminalrequest.domain.enums.TerminalRequestsStatus;
-import com.desafio.terminalrequest.domain.events.TerminalRequestCustomerValidated;
 import com.desafio.terminalrequest.domain.events.TerminalRequestDeliverySchedulingFailed;
 import com.desafio.terminalrequest.domain.events.TerminalReservationReservationConfirmed;
 import com.desafio.terminalrequest.domain.service.DeliverySchedulingServicePort;
 import com.desafio.terminalrequest.domain.service.TerminalRequestServicePort;
 import com.desafio.terminalrequest.fixtures.TerminalRequestFixture;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -41,6 +41,7 @@ class ProcessTerminalRequestReservationConfirmedUseCaseTest {
     }
 
     @Test
+    @DisplayName("Should schedule delivery and update status to AGENDADO when reservation is confirmed")
     void shouldScheduleDeliveryAndUpdateStatusToAgendadoWhenReservationIsConfirmed() {
         TerminalRequest terminalRequest = TerminalRequestFixture.createTerminalRequest();
         UUID terminalId = UUID.randomUUID();
@@ -63,6 +64,7 @@ class ProcessTerminalRequestReservationConfirmedUseCaseTest {
     }
 
     @Test
+    @DisplayName("Should update status to ERRO_AGENDAMENTO and publish failed event when delivery scheduling fails")
     void shouldUpdateStatusToErroAgendamentoAndPublishFailedEventWhenDeliverySchedulingFails() {
         TerminalRequest terminalRequest = TerminalRequestFixture.createTerminalRequest();
         var event = new TerminalReservationReservationConfirmed(

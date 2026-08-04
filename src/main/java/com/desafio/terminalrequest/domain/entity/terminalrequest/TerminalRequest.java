@@ -15,7 +15,7 @@ public class TerminalRequest {
     private final Address address;
     private UUID terminalId = null;
     private UUID trackingId = null;
-    private final Instant createdAt = Instant.now();
+    private Instant createdAt = Instant.now();
     private Instant updatedAt = Instant.now();
 
     public TerminalRequest(String customerId, TerminalType terminalType, Address address) {
@@ -43,6 +43,7 @@ public class TerminalRequest {
         this.terminalId = terminalId;
         this.trackingId = trackingId;
         this.address = address;
+        this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
@@ -96,6 +97,7 @@ public class TerminalRequest {
 
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TerminalRequest that = (TerminalRequest) o;
         return Objects.equals(id, that.id) && status == that.status && Objects.equals(customerId, that.customerId)

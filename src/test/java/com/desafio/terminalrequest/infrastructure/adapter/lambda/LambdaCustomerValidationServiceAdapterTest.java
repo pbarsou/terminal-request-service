@@ -3,6 +3,7 @@ package com.desafio.terminalrequest.infrastructure.adapter.lambda;
 import com.desafio.terminalrequest.domain.exceptions.CustomerValidationFailureException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -37,6 +38,7 @@ class LambdaCustomerValidationServiceAdapterTest {
     }
 
     @Test
+    @DisplayName("Should return true when customer is active")
     void shouldReturnTrueWhenCustomerIsActive() throws IOException, InterruptedException {
         String customerId = "CUST-1";
         String responseBody = "{\"active\": true}";
@@ -49,6 +51,7 @@ class LambdaCustomerValidationServiceAdapterTest {
     }
 
     @Test
+    @DisplayName("Should return false when customer is inactive")
     void shouldReturnFalseWhenCustomerIsInactive() throws IOException, InterruptedException {
         String customerId = "CUST-1";
         String responseBody = "{\"active\": false}";
@@ -61,6 +64,7 @@ class LambdaCustomerValidationServiceAdapterTest {
     }
 
     @Test
+    @DisplayName("Should throw exception when Lambda function call fails")
     void shouldThrowExceptionWhenLambdaCallFails() throws IOException, InterruptedException {
         String customerId = "CUST-1";
         when(httpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class))).thenThrow(new IOException("Connection failed"));

@@ -5,6 +5,7 @@ import com.desafio.terminalrequest.domain.enums.TerminalType;
 import jakarta.persistence.*;
 
 import java.time.Instant;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -26,7 +27,7 @@ public class TerminalRequestTable {
 
     public TerminalRequest toDomain() {
         return new TerminalRequest(
-                this.id,
+                Objects.requireNonNull(this.id, "Terminal Request ID must not be null"),
                 this.status,
                 this.customerId,
                 this.terminalType,

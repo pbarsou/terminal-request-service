@@ -3,6 +3,7 @@ package com.desafio.terminalrequest.infrastructure.adapter.lambda;
 import com.desafio.terminalrequest.domain.exceptions.TerminalReservationCompensationFailureException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -37,6 +38,7 @@ class LambdaTerminalReservationCompensatorServiceAdapterTest {
     }
 
     @Test
+    @DisplayName("Should call Lambda function successfully")
     void shouldCallLambdaSuccessfully() throws IOException, InterruptedException {
         when(httpResponse.statusCode()).thenReturn(200);
         when(httpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class))).thenReturn(httpResponse);
@@ -47,6 +49,7 @@ class LambdaTerminalReservationCompensatorServiceAdapterTest {
     }
 
     @Test
+    @DisplayName("Should handle Lambda function error")
     void shouldHandleLambdaError() throws IOException, InterruptedException {
         when(httpResponse.statusCode()).thenReturn(500);
         when(httpResponse.body()).thenReturn("Internal error");
@@ -58,6 +61,7 @@ class LambdaTerminalReservationCompensatorServiceAdapterTest {
     }
 
     @Test
+    @DisplayName("Should throw exception when Lambda function call fails")
     void shouldHandleExceptionDuringCall() throws IOException, InterruptedException {
         when(httpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class))).thenThrow(new IOException("Connection error"));
 

@@ -4,6 +4,7 @@ import com.desafio.terminalrequest.domain.enums.TerminalType;
 import com.desafio.terminalrequest.domain.exceptions.TerminalReservationFailureException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -39,10 +40,11 @@ class LambdaTerminalReservationServiceAdapterTest {
     }
 
     @Test
+    @DisplayName("Should return terminal ID when reservation successfully")
     void shouldReturnTerminalIdWhenReservationIsSuccessful() throws IOException, InterruptedException {
         UUID terminalId = UUID.randomUUID();
         String responseBody = "{\"terminalId\": \"" + terminalId + "\"}";
-        
+
         when(httpResponse.statusCode()).thenReturn(200);
         when(httpResponse.body()).thenReturn(responseBody);
         when(httpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class))).thenReturn(httpResponse);
@@ -53,6 +55,7 @@ class LambdaTerminalReservationServiceAdapterTest {
     }
 
     @Test
+    @DisplayName("Should return null when Lambda function returns error")
     void shouldReturnNullWhenLambdaReturnsError() throws IOException, InterruptedException {
         when(httpResponse.statusCode()).thenReturn(400);
         when(httpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class))).thenReturn(httpResponse);
@@ -63,7 +66,7 @@ class LambdaTerminalReservationServiceAdapterTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
+    @DisplayName("Should throw exception when Lambda function call fails")
     void shouldThrowExceptionWhenLambdaCallFails() throws IOException, InterruptedException {
         when(httpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class))).thenThrow(new IOException("Connection error"));
 

@@ -8,6 +8,7 @@ import com.desafio.terminalrequest.domain.service.TerminalRequestServicePort;
 import com.desafio.terminalrequest.domain.service.TerminalReservationServicePort;
 import com.desafio.terminalrequest.fixtures.TerminalRequestFixture;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -45,6 +46,7 @@ public class ProcessTerminalRequestCustomerValidatedUseCaseTest {
     }
 
     @Test
+    @DisplayName("Should reserve a terminal and update status to RESERVADO when reserve confirmed")
     void shouldReserveATerminalAndUpdateStatusToReservadoWhenReserveConfirmed() {
         var terminalRequest = TerminalRequestFixture.createTerminalRequest();
         var event = new TerminalRequestCustomerValidated(
@@ -73,6 +75,7 @@ public class ProcessTerminalRequestCustomerValidatedUseCaseTest {
     }
 
     @Test
+    @DisplayName("Should update status to ERRO_RESERVA if reserve a terminal failed")
     void shouldUpdateStatusToErroReservaIfReserveATerminalFailed() {
         var terminalRequest = TerminalRequestFixture.createTerminalRequest();
         var event = new TerminalRequestCustomerValidated(
@@ -89,4 +92,5 @@ public class ProcessTerminalRequestCustomerValidatedUseCaseTest {
         verify(publisher, never()).publishEvent(any());
         verify(terminalRequestService, never()).assignTerminal(any(), any());
     }
+
 }

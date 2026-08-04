@@ -2,6 +2,7 @@ package com.desafio.terminalrequest.application.listeners.events;
 
 import com.desafio.terminalrequest.domain.events.TerminalRequestDeliverySchedulingFailed;
 import com.desafio.terminalrequest.usecase.ProcessTerminalRequestDeliverySchedulingFailedUseCase;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,6 +23,7 @@ class TerminalRequestDeliverySchedulingFailedListenerTest {
     private TerminalRequestDeliverySchedulingFailedListener listener;
 
     @Test
+    @DisplayName("Should call use case when event is received")
     void shouldCallUseCaseWhenEventReceived() {
         var event = new TerminalRequestDeliverySchedulingFailed(
                 UUID.randomUUID(),

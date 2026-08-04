@@ -3,6 +3,7 @@ package com.desafio.terminalrequest.usecase;
 import com.desafio.terminalrequest.domain.events.TerminalRequestDeliverySchedulingFailed;
 import com.desafio.terminalrequest.domain.service.TerminalReservationCompensatorServicePort;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -26,6 +27,7 @@ class ProcessTerminalRequestDeliverySchedulingFailedUseCaseTest {
     }
 
     @Test
+    @DisplayName("Should compensate terminal reservation when delivery fails")
     void shouldCompensateTerminalReservationWhenDeliveryFails() {
         UUID terminalId = UUID.randomUUID();
         UUID requestId = UUID.randomUUID();

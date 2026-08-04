@@ -6,9 +6,10 @@ import com.desafio.terminalrequest.domain.events.TerminalRequestCreated;
 import com.desafio.terminalrequest.domain.events.TerminalRequestCustomerValidated;
 import com.desafio.terminalrequest.domain.service.CustomerValidationServicePort;
 import com.desafio.terminalrequest.domain.service.TerminalRequestServicePort;
-import com.desafio.terminalrequest.fixtures.AddressFixture;
 import com.desafio.terminalrequest.fixtures.TerminalRequestFixture;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -41,6 +42,7 @@ public class ProcessTerminalRequestCreatedUseCaseTest {
     }
 
     @Test
+    @DisplayName("Should validate customer and update status to VALIDADO when customer is active")
     void shouldValidateCustomerAndUpdateStatusToValidadoWhenCustomerIsActive() {
         TerminalRequest terminalRequest = TerminalRequestFixture.createTerminalRequest();
         TerminalRequestCreated event = new TerminalRequestCreated(
@@ -69,6 +71,7 @@ public class ProcessTerminalRequestCreatedUseCaseTest {
     }
 
     @Test
+    @DisplayName("Should update status to REJEITADO when customer is inactive")
     void shouldUpdateStatusToRejeitadoWhenCustomerIsInactive() {
         var terminalRequest = TerminalRequestFixture.createTerminalRequest();
         var event = new TerminalRequestCreated(
