@@ -2,6 +2,7 @@ package com.desafio.terminalrequest.usecase;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -12,6 +13,7 @@ import com.desafio.terminalrequest.domain.events.TerminalReservationReservationC
 import com.desafio.terminalrequest.domain.service.TerminalRequestServicePort;
 import com.desafio.terminalrequest.domain.service.TerminalReservationServicePort;
 import com.desafio.terminalrequest.fixtures.TerminalRequestFixture;
+import com.desafio.terminalrequest.infrastructure.config.datadog.event.StatsService;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,13 +33,15 @@ public class ProcessTerminalRequestCustomerValidatedUseCaseTest {
 
   @Mock private ApplicationEventPublisher publisher;
 
+  @Mock private StatsService statsService;
+
   private ProcessTerminalRequestCustomerValidatedUseCase useCase;
 
   @BeforeEach
   void setUp() {
     useCase =
         new ProcessTerminalRequestCustomerValidatedUseCase(
-            terminalRequestService, terminalReservationService, publisher);
+            terminalRequestService, terminalReservationService, publisher, statsService);
   }
 
   @Test
@@ -62,6 +66,8 @@ public class ProcessTerminalRequestCustomerValidatedUseCaseTest {
     verify(terminalRequestService)
         .updateStatus(event.terminalRequestId(), TerminalRequestsStatus.RESERVADO);
     verify(terminalRequestService).assignTerminal(event.terminalRequestId(), terminalId);
+    verify(statsService)
+        .recordEvent(eq(StatsService.CustomEvents.TERMINAL_RESERVATION_SUCCESS), any());
 
     ArgumentCaptor<TerminalReservationReservationConfirmed> eventCaptor =
         ArgumentCaptor.forClass(TerminalReservationReservationConfirmed.class);
@@ -88,6 +94,8 @@ public class ProcessTerminalRequestCustomerValidatedUseCaseTest {
 
     verify(terminalRequestService)
         .updateStatus(event.terminalRequestId(), TerminalRequestsStatus.ERRO_RESERVA);
+    verify(statsService)
+        .recordEvent(eq(StatsService.CustomEvents.TERMINAL_RESERVATION_FAILED), any());
     verify(publisher, never()).publishEvent(any());
     verify(terminalRequestService, never()).assignTerminal(any(), any());
   }

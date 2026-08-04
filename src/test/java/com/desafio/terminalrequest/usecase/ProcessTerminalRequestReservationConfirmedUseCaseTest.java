@@ -10,6 +10,7 @@ import com.desafio.terminalrequest.domain.events.TerminalReservationReservationC
 import com.desafio.terminalrequest.domain.service.DeliverySchedulingServicePort;
 import com.desafio.terminalrequest.domain.service.TerminalRequestServicePort;
 import com.desafio.terminalrequest.fixtures.TerminalRequestFixture;
+import com.desafio.terminalrequest.infrastructure.config.datadog.event.StatsService;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,13 +30,15 @@ class ProcessTerminalRequestReservationConfirmedUseCaseTest {
 
   @Mock private ApplicationEventPublisher publisher;
 
+  @Mock private StatsService statsService;
+
   private ProcessTerminalRequestReservationConfirmedUseCase useCase;
 
   @BeforeEach
   void setUp() {
     useCase =
         new ProcessTerminalRequestReservationConfirmedUseCase(
-            terminalRequestService, deliveryService, publisher);
+            terminalRequestService, deliveryService, publisher, statsService);
   }
 
   @Test
@@ -79,6 +82,8 @@ class ProcessTerminalRequestReservationConfirmedUseCaseTest {
     verify(terminalRequestService)
         .updateStatus(event.terminalRequestId(), TerminalRequestsStatus.ERRO_AGENDAMENTO);
     verify(terminalRequestService, never()).assignTracking(any(), any());
+    verify(statsService)
+        .recordEvent(eq(StatsService.CustomEvents.DELIVERY_SCHEDULING_FAILED), any());
 
     ArgumentCaptor<TerminalRequestDeliverySchedulingFailed> eventCaptor =
         ArgumentCaptor.forClass(TerminalRequestDeliverySchedulingFailed.class);

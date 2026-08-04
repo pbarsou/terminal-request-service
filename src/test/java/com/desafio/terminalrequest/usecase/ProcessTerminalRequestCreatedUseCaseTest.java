@@ -2,6 +2,7 @@ package com.desafio.terminalrequest.usecase;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -13,6 +14,7 @@ import com.desafio.terminalrequest.domain.events.TerminalRequestCustomerValidate
 import com.desafio.terminalrequest.domain.service.CustomerValidationServicePort;
 import com.desafio.terminalrequest.domain.service.TerminalRequestServicePort;
 import com.desafio.terminalrequest.fixtures.TerminalRequestFixture;
+import com.desafio.terminalrequest.infrastructure.config.datadog.event.StatsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,15 +31,17 @@ public class ProcessTerminalRequestCreatedUseCaseTest {
 
   @Mock private CustomerValidationServicePort customerService;
 
-  private ProcessTerminalRequestCreatedUseCase useCase;
-
   @Mock private ApplicationEventPublisher publisher;
+
+  @Mock private StatsService statsService;
+
+  private ProcessTerminalRequestCreatedUseCase useCase;
 
   @BeforeEach
   void setUp() {
     useCase =
         new ProcessTerminalRequestCreatedUseCase(
-            terminalRequestService, customerService, publisher);
+            terminalRequestService, customerService, publisher, statsService);
   }
 
   @Test
@@ -58,6 +62,8 @@ public class ProcessTerminalRequestCreatedUseCaseTest {
     verify(customerService).isActiveCustomer(event.customerId());
     verify(terminalRequestService)
         .updateStatus(event.terminalRequestId(), TerminalRequestsStatus.VALIDADO);
+    verify(statsService)
+        .recordEvent(eq(StatsService.CustomEvents.CUSTOMER_VALIDATION_SUCCESS), any());
 
     ArgumentCaptor<TerminalRequestCustomerValidated> eventCaptor =
         ArgumentCaptor.forClass(TerminalRequestCustomerValidated.class);
@@ -87,6 +93,8 @@ public class ProcessTerminalRequestCreatedUseCaseTest {
     verify(customerService).isActiveCustomer(event.customerId());
     verify(terminalRequestService)
         .updateStatus(event.terminalRequestId(), TerminalRequestsStatus.REJEITADO);
+    verify(statsService)
+        .recordEvent(eq(StatsService.CustomEvents.CUSTOMER_VALIDATION_FAILED), any());
     verify(publisher, never()).publishEvent(any());
   }
 }

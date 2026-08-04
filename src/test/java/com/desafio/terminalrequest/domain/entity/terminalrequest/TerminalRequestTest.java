@@ -1,6 +1,7 @@
 package com.desafio.terminalrequest.domain.entity.terminalrequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
@@ -15,6 +16,41 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 class TerminalRequestTest {
+
+  @Nested
+  @DisplayName("Address Validation")
+  class AddressValidation {
+
+    @Test
+    @DisplayName("should throw exception when zipCode is invalid")
+    void shouldThrowExceptionWhenZipCodeIsInvalid() {
+      assertThatThrownBy(() -> new Address("Rua A", "123", "Cidade", "ST", "invalid-cep"))
+          .isInstanceOf(IllegalArgumentException.class)
+          .hasMessage("Invalid CEP format. Expected 00000-000 or 00000000");
+    }
+
+    @Test
+    @DisplayName("should throw exception when zipCode is null")
+    void shouldThrowExceptionWhenZipCodeIsNull() {
+      assertThatThrownBy(() -> new Address("Rua A", "123", "Cidade", "ST", null))
+          .isInstanceOf(NullPointerException.class)
+          .hasMessage("CEP cannot be null");
+    }
+
+    @Test
+    @DisplayName("should create address when zipCode is valid with hyphen")
+    void shouldCreateAddressWhenZipCodeIsValidWithHyphen() {
+      Address address = new Address("Rua A", "123", "Cidade", "ST", "01001-000");
+      assertThat(address.zipCode()).isEqualTo("01001-000");
+    }
+
+    @Test
+    @DisplayName("should create address when zipCode is valid without hyphen")
+    void shouldCreateAddressWhenZipCodeIsValidWithoutHyphen() {
+      Address address = new Address("Rua A", "123", "Cidade", "ST", "01001000");
+      assertThat(address.zipCode()).isEqualTo("01001000");
+    }
+  }
 
   @Test
   @DisplayName("should create terminal request with default values")
@@ -181,7 +217,7 @@ class TerminalRequestTest {
               TerminalType.POS_WIFI,
               null,
               null,
-              new Address("R", "1", "C", "S", "Z"),
+              new Address("R", "1", "C", "S", "00000-000"),
               now,
               now);
       assertNotEquals(base, diffAddress);

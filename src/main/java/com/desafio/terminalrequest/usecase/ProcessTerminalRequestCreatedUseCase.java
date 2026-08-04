@@ -5,6 +5,8 @@ import com.desafio.terminalrequest.domain.events.TerminalRequestCreated;
 import com.desafio.terminalrequest.domain.events.TerminalRequestCustomerValidated;
 import com.desafio.terminalrequest.domain.service.CustomerValidationServicePort;
 import com.desafio.terminalrequest.domain.service.TerminalRequestServicePort;
+import com.desafio.terminalrequest.infrastructure.config.datadog.event.StatsService;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -18,14 +20,17 @@ public class ProcessTerminalRequestCreatedUseCase {
   private final TerminalRequestServicePort terminalRequestService;
   private final CustomerValidationServicePort customerService;
   private final ApplicationEventPublisher publisher;
+  private final StatsService statsService;
 
   public ProcessTerminalRequestCreatedUseCase(
       TerminalRequestServicePort terminalRequestService,
       CustomerValidationServicePort customerService,
-      ApplicationEventPublisher publisher) {
+      ApplicationEventPublisher publisher,
+      StatsService statsService) {
     this.terminalRequestService = terminalRequestService;
     this.customerService = customerService;
     this.publisher = publisher;
+    this.statsService = statsService;
   }
 
   public void execute(TerminalRequestCreated event) {
@@ -37,10 +42,24 @@ public class ProcessTerminalRequestCreatedUseCase {
     if (!isActive) {
       logger.error(
           "Request {} rejected: customer inactive or not exist", event.terminalRequestId());
+
+      statsService.recordEvent(
+          StatsService.CustomEvents.CUSTOMER_VALIDATION_FAILED,
+          Map.of(
+              "terminalRequestId", event.terminalRequestId().toString(),
+              "customerId", event.customerId().toString()));
+
       return;
     }
 
     logger.debug("Customer {} validated successfully", event.customerId());
+
+    statsService.recordEvent(
+        StatsService.CustomEvents.CUSTOMER_VALIDATION_SUCCESS,
+        Map.of(
+            "terminalRequestId", event.terminalRequestId().toString(),
+            "customerId", event.customerId().toString()));
+
     publisher.publishEvent(
         new TerminalRequestCustomerValidated(
             event.terminalType(), event.terminalRequestId(), event.address()));

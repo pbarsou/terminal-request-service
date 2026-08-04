@@ -24,7 +24,7 @@ public class TerminalRequestReservationConfirmedListener {
   @Async
   @EventListener
   public void handleRequest(TerminalReservationReservationConfirmed event) {
-    logger.info("Received reservation confirmed event for terminal: {}", event.terminalId());
+    logger.debug("Received reservation confirmed event for terminal: {}", event.terminalId());
     processRequestReservationConfirmedUseCase.execute(event);
   }
 }

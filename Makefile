@@ -29,7 +29,7 @@ run:
 	./mvnw spring-boot:run
 
 verify:
-	./mvnw clean verify
+	./mvnw fmt:format clean verify
 
 unit:
 	./mvnw clean test

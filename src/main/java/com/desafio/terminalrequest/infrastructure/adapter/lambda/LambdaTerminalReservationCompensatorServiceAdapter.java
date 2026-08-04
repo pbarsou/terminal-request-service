@@ -2,6 +2,7 @@ package com.desafio.terminalrequest.infrastructure.adapter.lambda;
 
 import com.desafio.terminalrequest.domain.exceptions.TerminalReservationCompensationFailureException;
 import com.desafio.terminalrequest.domain.service.TerminalReservationCompensatorServicePort;
+import com.desafio.terminalrequest.infrastructure.config.datadog.event.StatsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -22,14 +23,17 @@ public class LambdaTerminalReservationCompensatorServiceAdapter
   private final HttpClient httpClient;
   private final ObjectMapper objectMapper;
   private final String functionUrl;
+  private final StatsService statsService;
 
   public LambdaTerminalReservationCompensatorServiceAdapter(
       HttpClient httpClient,
       ObjectMapper objectMapper,
-      @Value("${aws.lambda.terminal-reservation-compensator-function}") String functionUrl) {
+      @Value("${aws.lambda.terminal-reservation-compensator-function}") String functionUrl,
+      StatsService statsService) {
     this.httpClient = httpClient;
     this.objectMapper = objectMapper;
     this.functionUrl = functionUrl.trim();
+    this.statsService = statsService;
   }
 
   @Override
@@ -56,9 +60,11 @@ public class LambdaTerminalReservationCompensatorServiceAdapter
             response.statusCode(),
             response.body());
       } else {
-        logger.info(
-            "Terminal reservation release request sent successfully for terminalId: {}",
-            terminalId);
+        statsService.recordEvent(
+            StatsService.CustomEvents.TERMINAL_RESERVATION_COMPENSATED,
+            Map.of(
+                "terminalId", terminalId.toString(),
+                "terminalRequestId", terminalRequestId.toString()));
       }
 
     } catch (Exception e) {

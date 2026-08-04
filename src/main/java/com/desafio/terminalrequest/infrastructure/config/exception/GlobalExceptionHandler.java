@@ -4,6 +4,7 @@ import com.desafio.terminalrequest.domain.exceptions.BusinessException;
 import com.desafio.terminalrequest.domain.exceptions.TerminalRequestNotFoundException;
 import com.desafio.terminalrequest.infrastructure.config.exception.dto.ResourceError;
 import com.desafio.terminalrequest.infrastructure.config.exception.dto.ResourceFieldError;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import tools.jackson.databind.exc.InvalidFormatException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -133,11 +135,25 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
       HttpStatusCode status,
       WebRequest request) {
 
-    ResourceError errorBody =
-        new ResourceError(
-            status.value(),
-            "The request is malformed",
-            "Failed to read request body. Check JSON syntax or Enum values.");
+    String detail = "Failed to read request body. Check JSON syntax or field types.";
+
+    if (ex.getCause() instanceof InvalidFormatException invalidFormat) {
+      if (invalidFormat.getTargetType().isEnum()) {
+        String field =
+            invalidFormat.getPath().stream()
+                .map(ref -> ref.getPropertyName())
+                .collect(Collectors.joining("."));
+
+        detail =
+            String.format(
+                "Invalid value '%s' for field '%s'. Accepted values are: %s",
+                invalidFormat.getValue(),
+                field,
+                Arrays.toString(invalidFormat.getTargetType().getEnumConstants()));
+      }
+    }
+
+    ResourceError errorBody = new ResourceError(status.value(), "The request is malformed", detail);
     ResponseEntity<Object> response =
         handleExceptionInternal(ex, errorBody, headers, status, request);
     logger.error("{}", errorBody, ex);

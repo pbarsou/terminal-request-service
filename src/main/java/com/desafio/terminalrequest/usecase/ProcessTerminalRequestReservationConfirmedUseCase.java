@@ -5,6 +5,8 @@ import com.desafio.terminalrequest.domain.events.TerminalRequestDeliveryScheduli
 import com.desafio.terminalrequest.domain.events.TerminalReservationReservationConfirmed;
 import com.desafio.terminalrequest.domain.service.DeliverySchedulingServicePort;
 import com.desafio.terminalrequest.domain.service.TerminalRequestServicePort;
+import com.desafio.terminalrequest.infrastructure.config.datadog.event.StatsService;
+import java.util.Map;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,14 +21,17 @@ public class ProcessTerminalRequestReservationConfirmedUseCase {
   private final TerminalRequestServicePort terminalRequestService;
   private final DeliverySchedulingServicePort deliveryService;
   private final ApplicationEventPublisher publisher;
+  private final StatsService statsService;
 
   public ProcessTerminalRequestReservationConfirmedUseCase(
       TerminalRequestServicePort terminalRequestService,
       DeliverySchedulingServicePort deliveryService,
-      ApplicationEventPublisher publisher) {
+      ApplicationEventPublisher publisher,
+      StatsService statsService) {
     this.terminalRequestService = terminalRequestService;
     this.deliveryService = deliveryService;
     this.publisher = publisher;
+    this.statsService = statsService;
   }
 
   public void execute(TerminalReservationReservationConfirmed event) {
@@ -45,6 +50,12 @@ public class ProcessTerminalRequestReservationConfirmedUseCase {
           event.terminalRequestId(),
           event.terminalId());
 
+      statsService.recordEvent(
+          StatsService.CustomEvents.DELIVERY_SCHEDULING_FAILED,
+          Map.of(
+              "terminalRequestId", event.terminalRequestId().toString(),
+              "terminalId", event.terminalId().toString()));
+
       publisher.publishEvent(
           new TerminalRequestDeliverySchedulingFailed(
               event.terminalId(), event.terminalRequestId()));
@@ -53,9 +64,11 @@ public class ProcessTerminalRequestReservationConfirmedUseCase {
 
     terminalRequestService.updateStatus(event.terminalRequestId(), TerminalRequestsStatus.AGENDADO);
     terminalRequestService.assignTracking(event.terminalRequestId(), trackingId);
-    logger.info(
-        "Delivery scheduled for request {}. Tracking ID: {}",
-        event.terminalRequestId(),
-        trackingId);
+
+    statsService.recordEvent(
+        StatsService.CustomEvents.DELIVERY_SCHEDULING_SUCCESS,
+        Map.of(
+            "terminalRequestId", event.terminalRequestId().toString(),
+            "terminalId", event.terminalId().toString()));
   }
 }

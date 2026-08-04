@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import com.desafio.terminalrequest.domain.exceptions.TerminalReservationCompensationFailureException;
+import com.desafio.terminalrequest.infrastructure.config.datadog.event.StatsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.net.http.HttpClient;
@@ -25,6 +26,8 @@ class LambdaTerminalReservationCompensatorServiceAdapterTest {
 
   @Mock private HttpResponse<Object> httpResponse;
 
+  @Mock private StatsService statsService;
+
   private final ObjectMapper objectMapper = new ObjectMapper();
   private LambdaTerminalReservationCompensatorServiceAdapter adapter;
 
@@ -33,7 +36,7 @@ class LambdaTerminalReservationCompensatorServiceAdapterTest {
     String functionUrl = "http://localhost:4566/functions/compensator";
     adapter =
         new LambdaTerminalReservationCompensatorServiceAdapter(
-            httpClient, objectMapper, functionUrl);
+            httpClient, objectMapper, functionUrl, statsService);
   }
 
   @Test
@@ -46,6 +49,7 @@ class LambdaTerminalReservationCompensatorServiceAdapterTest {
     adapter.release(UUID.randomUUID(), UUID.randomUUID());
 
     verify(httpClient).send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class));
+    verify(statsService).recordEvent(any(), any());
   }
 
   @Test

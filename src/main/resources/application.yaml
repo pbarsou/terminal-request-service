@@ -39,3 +39,8 @@ aws:
     terminal-reservation-function: ${AWS_LAMBDA_TERMINAL_RESERVATION_FUNCTION:http://localhost:4566/2015-03-31/functions/terminal-reservation/invocations}
     terminal-reservation-compensator-function: ${AWS_LAMBDA_TERMINAL_RESERVATION_COMPENSATOR_FUNCTION:http://localhost:4566/2015-03-31/functions/terminal-reservation-compensator/invocations}
     delivery-function: ${AWS_LAMBDA_DELIVERY_FUNCTION:http://localhost:4566/2015-03-31/functions/delivery-scheduling/invocations}
+
+datadog:
+  statsd:
+    host: ${DD_AGENT_HOST:localhost}
+    port: ${DD_AGENT_PORT:8125}
