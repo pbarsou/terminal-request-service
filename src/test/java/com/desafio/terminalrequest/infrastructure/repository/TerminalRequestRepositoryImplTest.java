@@ -6,8 +6,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.desafio.terminalrequest.domain.entity.terminalrequest.TerminalRequest;
-import com.desafio.terminalrequest.domain.entity.terminalrequest.TerminalRequestTable;
 import com.desafio.terminalrequest.fixtures.TerminalRequestFixture;
+import com.desafio.terminalrequest.infrastructure.adapter.postgres.model.TerminalRequestTable;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

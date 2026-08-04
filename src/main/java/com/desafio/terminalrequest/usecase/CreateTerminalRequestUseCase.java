@@ -39,7 +39,7 @@ public class CreateTerminalRequestUseCase {
         StatsService.CustomEvents.TERMINAL_REQUEST_CREATED,
         Map.of(
             "terminalRequestId", savedRequest.getId().toString(),
-            "customerId", savedRequest.getCustomerId().toString(),
+            "customerId", savedRequest.getCustomerId(),
             "terminalType", savedRequest.getTerminalType().toString()));
 
     publisher.publishEvent(

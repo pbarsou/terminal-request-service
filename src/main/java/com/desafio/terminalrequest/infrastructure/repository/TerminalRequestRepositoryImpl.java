@@ -1,8 +1,8 @@
 package com.desafio.terminalrequest.infrastructure.repository;
 
 import com.desafio.terminalrequest.domain.entity.terminalrequest.TerminalRequest;
-import com.desafio.terminalrequest.domain.entity.terminalrequest.TerminalRequestTable;
 import com.desafio.terminalrequest.domain.repository.TerminalRequestRepository;
+import com.desafio.terminalrequest.infrastructure.adapter.postgres.model.TerminalRequestTable;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;

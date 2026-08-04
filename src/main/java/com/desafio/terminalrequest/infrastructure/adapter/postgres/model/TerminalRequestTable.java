@@ -1,5 +1,7 @@
-package com.desafio.terminalrequest.domain.entity.terminalrequest;
+package com.desafio.terminalrequest.infrastructure.adapter.postgres.model;
 
+import com.desafio.terminalrequest.domain.entity.terminalrequest.Address;
+import com.desafio.terminalrequest.domain.entity.terminalrequest.TerminalRequest;
 import com.desafio.terminalrequest.domain.enums.TerminalRequestsStatus;
 import com.desafio.terminalrequest.domain.enums.TerminalType;
 import jakarta.persistence.*;

@@ -1,9 +1,9 @@
 package com.desafio.terminalrequest.fixtures;
 
 import com.desafio.terminalrequest.domain.entity.terminalrequest.TerminalRequest;
-import com.desafio.terminalrequest.domain.entity.terminalrequest.TerminalRequestTable;
 import com.desafio.terminalrequest.domain.enums.TerminalRequestsStatus;
 import com.desafio.terminalrequest.domain.enums.TerminalType;
+import com.desafio.terminalrequest.infrastructure.adapter.postgres.model.TerminalRequestTable;
 import java.time.Instant;
 import java.util.UUID;
 
