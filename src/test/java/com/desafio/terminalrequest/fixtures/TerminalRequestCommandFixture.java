@@ -4,7 +4,8 @@ import com.desafio.terminalrequest.application.api.command.CreateTerminalRequest
 import com.desafio.terminalrequest.domain.enums.TerminalType;
 
 public class TerminalRequestCommandFixture {
-    public static CreateTerminalRequestCommand createCommand() {
-        return new CreateTerminalRequestCommand("CUST-1", TerminalType.POS_WIFI, AddressFixture.createAddress());
-    }
+  public static CreateTerminalRequestCommand createCommand() {
+    return new CreateTerminalRequestCommand(
+        "CUST-1", TerminalType.POS_WIFI, AddressFixture.createAddress());
+  }
 }

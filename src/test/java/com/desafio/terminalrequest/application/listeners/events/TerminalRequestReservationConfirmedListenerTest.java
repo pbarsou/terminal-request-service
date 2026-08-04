@@ -1,8 +1,11 @@
 package com.desafio.terminalrequest.application.listeners.events;
 
+import static org.mockito.Mockito.verify;
+
 import com.desafio.terminalrequest.domain.events.TerminalReservationReservationConfirmed;
 import com.desafio.terminalrequest.fixtures.AddressFixture;
 import com.desafio.terminalrequest.usecase.ProcessTerminalRequestReservationConfirmedUseCase;
+import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,30 +13,22 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.UUID;
-
-import static org.mockito.Mockito.verify;
-
 @ExtendWith(MockitoExtension.class)
 class TerminalRequestReservationConfirmedListenerTest {
 
-    @Mock
-    private ProcessTerminalRequestReservationConfirmedUseCase useCase;
+  @Mock private ProcessTerminalRequestReservationConfirmedUseCase useCase;
 
-    @InjectMocks
-    private TerminalRequestReservationConfirmedListener listener;
+  @InjectMocks private TerminalRequestReservationConfirmedListener listener;
 
-    @Test
-    @DisplayName("Should call use case when event is received")
-    void shouldCallUseCaseWhenEventReceived() {
-        var event = new TerminalReservationReservationConfirmed(
-                AddressFixture.createAddress(),
-                UUID.randomUUID(),
-                UUID.randomUUID()
-        );
+  @Test
+  @DisplayName("Should call use case when event is received")
+  void shouldCallUseCaseWhenEventReceived() {
+    var event =
+        new TerminalReservationReservationConfirmed(
+            AddressFixture.createAddress(), UUID.randomUUID(), UUID.randomUUID());
 
-        listener.handleRequest(event);
+    listener.handleRequest(event);
 
-        verify(useCase).execute(event);
-    }
+    verify(useCase).execute(event);
+  }
 }

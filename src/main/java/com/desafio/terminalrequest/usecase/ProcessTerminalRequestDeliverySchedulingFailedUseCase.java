@@ -9,19 +9,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProcessTerminalRequestDeliverySchedulingFailedUseCase {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+  private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final TerminalReservationCompensatorServicePort compensatorService;
+  private final TerminalReservationCompensatorServicePort compensatorService;
 
-    public ProcessTerminalRequestDeliverySchedulingFailedUseCase(
-            TerminalReservationCompensatorServicePort compensatorService
-    ) {
-        this.compensatorService = compensatorService;
-    }
+  public ProcessTerminalRequestDeliverySchedulingFailedUseCase(
+      TerminalReservationCompensatorServicePort compensatorService) {
+    this.compensatorService = compensatorService;
+  }
 
-    public void execute(TerminalRequestDeliverySchedulingFailed event) {
-        logger.debug("Compensating delivery scheduling failure for terminal: {}", event.terminalId());
+  public void execute(TerminalRequestDeliverySchedulingFailed event) {
+    logger.debug("Compensating delivery scheduling failure for terminal: {}", event.terminalId());
 
-        compensatorService.release(event.terminalId(), event.terminalRequestId());
-    }
+    compensatorService.release(event.terminalId(), event.terminalRequestId());
+  }
 }

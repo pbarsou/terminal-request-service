@@ -11,20 +11,21 @@ import org.springframework.stereotype.Component;
 @Component
 public class TerminalRequestDeliverySchedulingFailedListener {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+  private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final ProcessTerminalRequestDeliverySchedulingFailedUseCase processDeliverySchedulingFailedUseCase;
+  private final ProcessTerminalRequestDeliverySchedulingFailedUseCase
+      processDeliverySchedulingFailedUseCase;
 
-    public TerminalRequestDeliverySchedulingFailedListener(
-            ProcessTerminalRequestDeliverySchedulingFailedUseCase processDeliverySchedulingFailedUseCase
-    ) {
-        this.processDeliverySchedulingFailedUseCase = processDeliverySchedulingFailedUseCase;
-    }
+  public TerminalRequestDeliverySchedulingFailedListener(
+      ProcessTerminalRequestDeliverySchedulingFailedUseCase
+          processDeliverySchedulingFailedUseCase) {
+    this.processDeliverySchedulingFailedUseCase = processDeliverySchedulingFailedUseCase;
+  }
 
-    @Async
-    @EventListener
-    public void handleRequest(TerminalRequestDeliverySchedulingFailed event) {
-        logger.debug("Compensating delivery scheduling failure for terminal: {}", event.terminalId());
-        processDeliverySchedulingFailedUseCase.execute(event);
-    }
+  @Async
+  @EventListener
+  public void handleRequest(TerminalRequestDeliverySchedulingFailed event) {
+    logger.debug("Compensating delivery scheduling failure for terminal: {}", event.terminalId());
+    processDeliverySchedulingFailedUseCase.execute(event);
+  }
 }

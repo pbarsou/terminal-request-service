@@ -8,12 +8,12 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @TestConfiguration
 public class TestContainersConfiguration {
 
-    @Bean
-    @ServiceConnection
-    public PostgreSQLContainer<?> postgresSQLContainer() {
-        return new PostgreSQLContainer<>("postgres:16-alpine")
-                .withDatabaseName("terminal_request_service")
-                .withUsername("postgres")
-                .withPassword("postgres");
-    }
+  @Bean
+  @ServiceConnection
+  public PostgreSQLContainer<?> postgresSQLContainer() {
+    return new PostgreSQLContainer<>("postgres:16-alpine")
+        .withDatabaseName("terminal_request_service")
+        .withUsername("postgres")
+        .withPassword("postgres");
+  }
 }

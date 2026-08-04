@@ -11,18 +11,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class TerminalRequestCreatedListener {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+  private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final ProcessTerminalRequestCreatedUseCase processTerminalRequestCreatedUseCase;
+  private final ProcessTerminalRequestCreatedUseCase processTerminalRequestCreatedUseCase;
 
-    public TerminalRequestCreatedListener(ProcessTerminalRequestCreatedUseCase processTerminalRequestCreatedUseCase) {
-        this.processTerminalRequestCreatedUseCase = processTerminalRequestCreatedUseCase;
-    }
+  public TerminalRequestCreatedListener(
+      ProcessTerminalRequestCreatedUseCase processTerminalRequestCreatedUseCase) {
+    this.processTerminalRequestCreatedUseCase = processTerminalRequestCreatedUseCase;
+  }
 
-    @Async
-    @EventListener
-    public void handleRequest(TerminalRequestCreated event) {
-        logger.debug("Validating customer {}", event.customerId());
-        processTerminalRequestCreatedUseCase.execute(event);
-    }
+  @Async
+  @EventListener
+  public void handleRequest(TerminalRequestCreated event) {
+    logger.debug("Validating customer {}", event.customerId());
+    processTerminalRequestCreatedUseCase.execute(event);
+  }
 }

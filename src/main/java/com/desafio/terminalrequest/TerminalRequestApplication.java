@@ -8,8 +8,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @SpringBootApplication
 public class TerminalRequestApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(TerminalRequestApplication.class, args);
-	}
-
+  public static void main(String[] args) {
+    SpringApplication.run(TerminalRequestApplication.class, args);
+  }
 }

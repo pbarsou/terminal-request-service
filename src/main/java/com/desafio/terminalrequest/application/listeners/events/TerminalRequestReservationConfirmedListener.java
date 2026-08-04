@@ -11,20 +11,20 @@ import org.springframework.stereotype.Component;
 @Component
 public class TerminalRequestReservationConfirmedListener {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+  private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final ProcessTerminalRequestReservationConfirmedUseCase processRequestReservationConfirmedUseCase;
+  private final ProcessTerminalRequestReservationConfirmedUseCase
+      processRequestReservationConfirmedUseCase;
 
-    public TerminalRequestReservationConfirmedListener(
-            ProcessTerminalRequestReservationConfirmedUseCase processRequestReservationConfirmedUseCase
-    ) {
-        this.processRequestReservationConfirmedUseCase = processRequestReservationConfirmedUseCase;
-    }
+  public TerminalRequestReservationConfirmedListener(
+      ProcessTerminalRequestReservationConfirmedUseCase processRequestReservationConfirmedUseCase) {
+    this.processRequestReservationConfirmedUseCase = processRequestReservationConfirmedUseCase;
+  }
 
-    @Async
-    @EventListener
-    public void handleRequest(TerminalReservationReservationConfirmed event) {
-        logger.info("Received reservation confirmed event for terminal: {}", event.terminalId());
-        processRequestReservationConfirmedUseCase.execute(event);
-    }
+  @Async
+  @EventListener
+  public void handleRequest(TerminalReservationReservationConfirmed event) {
+    logger.info("Received reservation confirmed event for terminal: {}", event.terminalId());
+    processRequestReservationConfirmedUseCase.execute(event);
+  }
 }
