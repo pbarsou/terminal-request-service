@@ -126,3 +126,7 @@ Para garantir a qualidade e o cumprimento dos requisitos, foram implementados te
 1.  **Mensageria**: Utilizar um broker real (SQS, RabbitMQ ou Kafka) para garantir a persistência dos eventos em caso de queda da aplicação e garantir re-try.
 2.  **Idempotência**: Implementar controle de idempotência no processamento de eventos para evitar duplicidade em casos de re-try.
 3.  **Circuit Breaker**: Adicionar um Circuit Breaker para lidar com falhas nas integrações externas, tornando a aplicação mais resiliente.
+4.  **Histórico de Status (Auditoria)**: Implementar o registro de transições de estado em uma tabela dedicada, permitindo uma auditoria detalhada quanto as transições de estado e tempo do fluxo.
+5.  **Timeouts nos Adapters**: Configurar timeouts para as chamadas aos serviços externos, prevenindo que latências excessivas prejudiquem a performance do sistema.
+6.  **Segurança (OAuth2/JWT)**: Criar uma camada de autenticação e autorização para proteger os endpoints, garantindo que apenas usuários ou sistemas autenticados possam criar ou consultar solicitações.
+7.  **Paginação e Filtros**: Criar endpoint para consulta de terminal requests baseado em paginação e filtros.
